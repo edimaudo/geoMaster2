@@ -1,0 +1,70 @@
+{
+  "$schema": "https://developers.reddit.com/schema/config-file.v1.json",
+  "name": "geomaster",
+  "post": {
+    "dir": "dist/client",
+    "entrypoints": {
+      "default": {
+        "entry": "index.html",
+        "height": "regular",
+        "inline": true
+      },
+      "game": {
+        "entry": "game.html",
+        "height": "tall"
+      },
+      "classic": {
+        "entry": "classic.html",
+        "height": "tall"
+      }
+    }
+  },
+  "server": {
+    "dir": "dist/server",
+    "entry": "index.cjs"
+  },
+  "permissions": {
+    "redis": true,
+    "journeys": true,
+    "reddit": {
+      "enable": true,
+      "scope": "moderator",
+      "asUser": [
+        "SUBMIT_COMMENT"
+      ]
+    }
+  },
+  "scheduler": {
+    "tasks": {
+      "daily-coordinate-drop": {
+        "endpoint": "/internal/scheduler/daily-drop",
+        "cron": "0 0 * * *"
+      }
+    }
+  },
+  "menu": {
+    "items": [
+      {
+        "label": "Create today's geoMaster post",
+        "description": "Publish the deterministic daily five-coordinate challenge.",
+        "forUserType": "moderator",
+        "location": "subreddit",
+        "endpoint": "/internal/menu/create-daily-post"
+      }
+    ]
+  },
+  "settings": {
+    "global": {
+      "serverSalt": {
+        "type": "string",
+        "label": "Daily puzzle server salt",
+        "isSecret": true,
+        "defaultValue": "",
+        "helpText": "Set a random secret before publishing. This salt is used with the UTC date to derive each daily puzzle seed."
+      }
+    }
+  },
+  "dev": {
+    "subreddit": "geomaster-dev"
+  }
+}

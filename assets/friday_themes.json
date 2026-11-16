@@ -1,0 +1,10 @@
+{
+  "themes": [
+    {"id":"cinema","label":"Film locations"},
+    {"id":"science","label":"Science and discovery"},
+    {"id":"engineering","label":"Engineering marvels"},
+    {"id":"history","label":"Historical crossroads"},
+    {"id":"architecture","label":"Iconic architecture"}
+  ],
+  "selectionRule": "On UTC Fridays, round five prefers a catalog location with a fridayTheme tag. Other days may use any tier-five cultural or landmark location."
+}
