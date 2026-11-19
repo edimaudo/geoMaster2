@@ -1,16 +1,12 @@
 {
+  "$schema": "https://openapi.vercel.sh/vercel.json",
   "version": 2,
-  "builds": [
-    {
-      "src": "main.py",
-      "use": "@vercel/python",
-      "config": { "maxDuration": 120, "memory": 1024 }
-    }
-  ],
+  "buildCommand": "npm run build:vercel",
+  "outputDirectory": "dist/vercel",
   "rewrites": [
     {
-      "source": "/(.*)",
-      "destination": "main.py"
+      "source": "/",
+      "destination": "/game.html"
     }
   ]
 }
