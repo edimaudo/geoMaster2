@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "type": "module",
-  "description": "A five-round daily geography challenge built with Reddit Devvit Web.",
+  "description": "One geoMaster game with a daily location challenge and four country quiz modes, built with Reddit Devvit Web.",
   "engines": {
     "node": ">=24.18.0"
   },
@@ -11,8 +11,8 @@
     "build": "vite build --config vite.client.config.ts && vite build --config vite.server.config.ts",
     "watch:client": "vite build --config vite.client.config.ts --watch",
     "watch:server": "vite build --config vite.server.config.ts --watch",
-    "dev": "npm run build && (npm run watch:client & npm run watch:server &) && devvit playtest r/geomaster-dev",
-    "playtest": "devvit playtest r/geomaster-dev",
+    "dev": "npm run build && (npm run watch:client & npm run watch:server &) && devvit playtest",
+    "playtest": "devvit playtest",
     "typecheck": "tsc --noEmit",
     "test": "npm run typecheck && vitest run",
     "test:watch": "vitest"

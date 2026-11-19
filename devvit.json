@@ -6,15 +6,10 @@
     "entrypoints": {
       "default": {
         "entry": "index.html",
-        "height": "regular",
-        "inline": true
+        "height": "regular"
       },
       "game": {
         "entry": "game.html",
-        "height": "tall"
-      },
-      "classic": {
-        "entry": "classic.html",
         "height": "tall"
       }
     }
@@ -63,8 +58,5 @@
         "helpText": "Set a random secret before publishing. This salt is used with the UTC date to derive each daily puzzle seed."
       }
     }
-  },
-  "dev": {
-    "subreddit": "geomaster-dev"
   }
 }

@@ -206,7 +206,7 @@ export async function buildInitResponse(
     dispatchNumber: puzzle.dispatchNumber,
     isArchive,
     playedToday: asInteger(playedTodayRaw),
-    subredditAvgDistanceKm: avgDistance,
+    geoMasterAvgDistanceKm: avgDistance,
     status: session.status,
     currentRound: session.currentRound,
     streak: stats.streak,
@@ -552,7 +552,7 @@ export async function expireRoundIfNeeded(
   return session;
 }
 
-export async function getSubredditPlayedToday(date = utcDateString()): Promise<number> {
+export async function getGeoMasterPlayedToday(date = utcDateString()): Promise<number> {
   return asInteger(await redis.get(`geomaster:plays:${date}`));
 }
 

@@ -9,12 +9,12 @@ export interface CountryRecord {
   beer: string;
 }
 
-export type ClassicGameMode = 'country' | 'flag' | 'capital' | 'guesser';
+export type QuizModeId = 'country' | 'flag' | 'capital' | 'guesser';
 
 export const COUNTRIES = countryData.countries as CountryRecord[];
 
-export const CLASSIC_MODES: Array<{
-  id: ClassicGameMode;
+export const QUIZ_MODES: Array<{
+  id: QuizModeId;
   title: string;
   description: string;
 }> = [
@@ -37,16 +37,16 @@ export function shuffle<T>(items: readonly T[], random: () => number = Math.rand
   return result;
 }
 
-export function buildClassicQuestions(
-  mode: ClassicGameMode,
+export function buildQuizQuestions(
+  mode: QuizModeId,
   count = 7,
   random: () => number = Math.random,
 ): Array<{ correct: CountryRecord; options: CountryRecord[] }> {
   if (!Number.isInteger(count) || count < 1 || count > COUNTRIES.length) {
     throw new RangeError(`Question count must be between 1 and ${COUNTRIES.length}.`);
   }
-  if (!CLASSIC_MODES.some((item) => item.id === mode)) {
-    throw new Error(`Unsupported classic game mode: ${mode}`);
+  if (!QUIZ_MODES.some((item) => item.id === mode)) {
+    throw new Error(`Unsupported quiz mode: ${mode}`);
   }
 
   const selected = shuffle(COUNTRIES, random).slice(0, count);

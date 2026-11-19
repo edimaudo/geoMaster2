@@ -1,7 +1,6 @@
 import { useEffect, useState } from 'react';
 import type React from 'react';
 import { requestExpandedMode } from '@devvit/web/client';
-import { telemetry } from '@devvit/analytics/client/reddit';
 import type { InitResponse } from '../../shared/types';
 
 interface ErrorBody { error?: string }
@@ -32,11 +31,7 @@ export function InlineCard(): JSX.Element {
     return () => { active = false; };
   }, []);
 
-  const playLabel = data?.status === 'COMPLETED'
-    ? 'View Atlas Summary'
-    : data?.status === 'IN_PROGRESS'
-      ? 'Resume Expedition'
-      : 'Drop Today’s Pins';
+  const playLabel = 'Open geoMaster';
   const statusLine = data?.status === 'COMPLETED'
     ? `Completed · ${data.totalScore.toLocaleString()} pts${data.percentileTop ? ` · Top ${data.percentileTop}%` : ''}`
     : data?.status === 'IN_PROGRESS'
@@ -45,25 +40,17 @@ export function InlineCard(): JSX.Element {
 
   const handlePlay = (event: React.MouseEvent<HTMLButtonElement>) => {
     try {
-      void telemetry.startJourney();
       requestExpandedMode(event.nativeEvent, 'game', { title: 'geoMaster' });
     } catch (reason) {
-      console.error('[geoMaster] could not open the expedition', reason);
-      setError('Reddit could not open the expedition. Try again.');
+      console.error('[geoMaster] could not open the game', reason);
+      setError('Reddit could not open geoMaster. Try again.');
     }
   };
 
-  const handleClassicPlay = (event: React.MouseEvent<HTMLButtonElement>) => {
-    try {
-      requestExpandedMode(event.nativeEvent, 'classic', { title: 'geoMaster Classic' });
-    } catch (reason) {
-      console.error('[geoMaster] could not open classic quiz', reason);
-      setError('Reddit could not open the classic quiz. Try again.');
-    }
-  };
+
 
   return (
-    <main className="inline-shell" aria-label="geoMaster daily challenge">
+    <main className="inline-shell" aria-label="geoMaster game post">
       <header className="inline-header">
         <div className="brand-lockup"><span className="brand-mark" aria-hidden="true">G</span><span>geoMaster</span></div>
         <span className="dispatch-chip">Dispatch #{String(data?.dispatchNumber ?? 1).padStart(3, '0')}</span>
@@ -85,18 +72,17 @@ export function InlineCard(): JSX.Element {
 
       <footer className="inline-footer">
         {error && <p className="inline-error" role="alert">{error}</p>}
-        <button className="primary-button inline-play" type="button" onClick={handlePlay} disabled={loading || Boolean(error && !data)}>
-          <span>{loading ? 'Loading challenge…' : playLabel}</span><span aria-hidden="true">↗</span>
+        <button className="primary-button inline-play" type="button" onClick={handlePlay}>
+          <span>{playLabel}</span><span aria-hidden="true">↗</span>
         </button>
         <div className="inline-bottom-row">
           <div className="inline-meta">
-            <span>{data ? `${data.playedToday.toLocaleString()} played today` : 'A new challenge every day'}</span>
+            <span>{data ? `${data.playedToday.toLocaleString()} played today` : 'A new daily challenge'}</span>
             {data && data.streak > 0 && <span className="streak-pill">{data.streak}-day streak</span>}
-            {data?.subredditAvgDistanceKm !== null && data?.subredditAvgDistanceKm !== undefined && (
-              <span>Community avg · {Math.round(data.subredditAvgDistanceKm).toLocaleString()} km</span>
+            {data?.geoMasterAvgDistanceKm !== null && data?.geoMasterAvgDistanceKm !== undefined && (
+              <span>geoMaster avg · {Math.round(data.geoMasterAvgDistanceKm).toLocaleString()} km</span>
             )}
           </div>
-          <button className="classic-entry-link" type="button" onClick={handleClassicPlay}>Play classic quiz</button>
         </div>
       </footer>
     </main>

@@ -91,7 +91,7 @@ export interface InitResponse {
   dispatchNumber: number;
   isArchive: boolean;
   playedToday: number;
-  subredditAvgDistanceKm: number | null;
+  geoMasterAvgDistanceKm: number | null;
   status: SessionStatus;
   currentRound: number;
   streak: number;

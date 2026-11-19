@@ -13,6 +13,7 @@ interface Props {
   earnedFlairs: string[];
   hasCommented: boolean;
   onShared: () => void;
+  onBack?: () => void;
   units: 'km' | 'mi';
   onUnitsChange: (value: 'km' | 'mi') => void;
 }
@@ -40,6 +41,7 @@ export function ResultCard({
   earnedFlairs,
   hasCommented,
   onShared,
+  onBack,
   units,
   onUnitsChange,
 }: Props): JSX.Element {
@@ -82,6 +84,7 @@ export function ResultCard({
 
   return (
     <main className="result-shell">
+      {onBack && <button className="result-back" type="button" onClick={onBack}>← All modes</button>}
       <header className="result-heading">
         <div>
           <span className="eyebrow">EXPEDITION COMPLETE</span>
@@ -97,7 +100,7 @@ export function ResultCard({
       <section className="score-hero" aria-label="Daily score summary">
         <div className="score-total"><strong>{totalScore.toLocaleString()}</strong><span>/ 5,000 pts</span></div>
         <div className="score-details">
-          <div><strong>{percentileTop === null || data.isArchive ? '—' : `Top ${percentileTop}%`}</strong><span>{data.isArchive ? 'Practice archive' : `${playerCount.toLocaleString()} players`}</span></div>
+          <div><strong>{percentileTop === null || data.isArchive ? '—' : `Top ${percentileTop}%`}</strong><span>{data.isArchive ? 'Practice archive' : `${playerCount.toLocaleString()} geoMaster players`}</span></div>
           <div><strong>{streak} day{streak === 1 ? '' : 's'}</strong><span>Current streak</span></div>
           <div><strong>{avgKm === null ? 'No pins' : formatDistance(avgKm, units)}</strong><span>Average error</span></div>
         </div>
@@ -129,7 +132,7 @@ export function ResultCard({
               <div className="coordinates-line">{selected.targetLat.toFixed(2)}° {selected.targetLat >= 0 ? 'N' : 'S'} · {Math.abs(selected.targetLng).toFixed(2)}° {selected.targetLng >= 0 ? 'E' : 'W'}</div>
               <div className="comparison-line">
                 <span>Your error <strong>{formatDistance(selected.distanceKm, units)}</strong></span>
-                <span>Community <strong>{formatDistance(selected.crowdAvgDistanceKm, units)}</strong></span>
+                <span>All players <strong>{formatDistance(selected.crowdAvgDistanceKm, units)}</strong></span>
                 <span>Round score <strong>{selected.roundScore.toLocaleString()}</strong></span>
               </div>
               {selected.triviaTitle && <div className="trivia-note"><strong>{selected.triviaTitle}</strong><p>{selected.triviaNote}</p></div>}

@@ -16,6 +16,7 @@ interface LatLng { lat: number; lng: number }
 interface ApiError { error?: string }
 interface TelemetryClient {
   appReady?: () => void | Promise<void>;
+  startJourney?: () => void | Promise<void>;
   progress: (event: { progress: number; action?: string }) => void | Promise<void>;
   endJourney: (event: { complete: boolean; game?: { win?: boolean; score?: number } }) => void | Promise<void>;
 }
@@ -47,7 +48,9 @@ function coord(value: number, axis: 'lat' | 'lng'): string {
   return `${Math.abs(value).toFixed(2)}° ${direction}`;
 }
 
-export function ActivePlay(): JSX.Element {
+interface Props { onBack?: () => void; }
+
+export function ActivePlay({ onBack }: Props = {}): JSX.Element {
   const [data, setData] = useState<InitResponse | null>(null);
   const [round, setRound] = useState<PublicRound | null>(null);
   const [pin, setPin] = useState<LatLng | null>(null);
@@ -184,6 +187,7 @@ export function ActivePlay(): JSX.Element {
   useEffect(() => {
     let active = true;
     void journeys.appReady?.();
+    void journeys.startJourney?.();
     const initialise = async () => {
       try {
         const initial = await api<InitResponse>('/api/init');
@@ -261,7 +265,7 @@ export function ActivePlay(): JSX.Element {
   const summaryData = data && data.status === 'COMPLETED' ? data : null;
 
   if (loading) {
-    return <main className="game-loading"><div className="loading-mark">G</div><p>Mapping today’s coordinates…</p><div className="loading-line" /></main>;
+    return <main className="game-loading">{onBack && <button className="result-back" type="button" onClick={onBack}>← All modes</button>}<div className="loading-mark">G</div><p>Loading Daily Expedition…</p><div className="loading-line" /></main>;
   }
 
   if (summaryData) {
@@ -276,6 +280,7 @@ export function ActivePlay(): JSX.Element {
         earnedFlairs={finalResponse?.earnedFlairs ?? summaryData.earnedFlairs}
         hasCommented={shared || summaryData.hasCommented}
         onShared={() => setShared(true)}
+        onBack={onBack}
         units={units}
         onUnitsChange={setUnits}
       />
@@ -283,12 +288,13 @@ export function ActivePlay(): JSX.Element {
   }
 
   if (error && !round && !revealed) {
-    return <main className="game-error"><span className="brand-mark">G</span><h1>Expedition paused</h1><p role="alert">{error}</p><button className="primary-button" type="button" onClick={() => window.location.reload()}>Reload expedition</button></main>;
+    return <main className="game-error"><span className="brand-mark">G</span><h1>Daily Expedition paused</h1><p role="alert">{error}</p><div className="game-error-actions"><button className="primary-button" type="button" onClick={() => window.location.reload()}>Reload geoMaster</button>{onBack && <button className="secondary-button" type="button" onClick={onBack}>All modes</button>}</div></main>;
   }
 
   return (
     <main className="game-shell">
       <header className="game-hud">
+        {onBack && <button className="game-mode-back" type="button" onClick={onBack}>Modes</button>}
         <div className="round-progress" aria-label={`Round ${round?.round ?? revealed?.round ?? 1} of 5`}>
           {[1, 2, 3, 4, 5].map((number) => {
             const done = results.some((item) => item.round === number);

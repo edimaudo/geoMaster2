@@ -17,7 +17,6 @@ export default defineConfig({
       input: {
         index: resolve(__dirname, 'src/client/index.html'),
         game: resolve(__dirname, 'src/client/game.html'),
-        classic: resolve(__dirname, 'src/client/classic.html'),
       },
     },
   },

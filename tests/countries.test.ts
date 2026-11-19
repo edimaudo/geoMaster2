@@ -1,8 +1,8 @@
 import { describe, expect, it } from 'vitest';
 import countryData from '../assets/countries.json';
 import {
-  buildClassicQuestions,
-  CLASSIC_MODES,
+  buildQuizQuestions,
+  QUIZ_MODES,
   COUNTRIES,
   flagUrl,
 } from '../src/shared/countries';
@@ -28,12 +28,12 @@ describe('original geoMaster country content', () => {
   });
 
   it('exposes the four original game modes', () => {
-    expect(CLASSIC_MODES.map((mode) => mode.id)).toEqual(['country', 'flag', 'capital', 'guesser']);
+    expect(QUIZ_MODES.map((mode) => mode.id)).toEqual(['country', 'flag', 'capital', 'guesser']);
   });
 
   it('creates seven questions with four unique options and one correct answer each', () => {
-    for (const mode of CLASSIC_MODES) {
-      const questions = buildClassicQuestions(mode.id, 7, () => 0.37);
+    for (const mode of QUIZ_MODES) {
+      const questions = buildQuizQuestions(mode.id, 7, () => 0.37);
       expect(questions).toHaveLength(7);
       expect(new Set(questions.map((question) => question.correct.code)).size).toBe(7);
       for (const question of questions) {
