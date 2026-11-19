@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "type": "module",
-  "description": "One geoMaster game with a daily location challenge and four country quiz modes, built with Reddit Devvit Web.",
+  "description": "One geoMaster is a country quiz game, built with Reddit Devvit Web.",
   "engines": {
     "node": ">=24.18.0"
   },
@@ -15,7 +15,8 @@
     "playtest": "devvit playtest",
     "typecheck": "tsc --noEmit",
     "test": "npm run typecheck && vitest run",
-    "test:watch": "vitest"
+    "test:watch": "vitest",
+    "build:web-preview": "vite build --config vite.vercel.config.ts --mode web-preview"
   },
   "dependencies": {
     "@devvit/analytics": "^0.15.0",
