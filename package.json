@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "type": "module",
-  "description": "One geoMaster is a country quiz game, built with Reddit Devvit Web.",
+  "description": "One geoMaster game with a daily location challenge and four country quiz modes, built with Reddit Devvit Web.",
   "engines": {
     "node": ">=24.18.0"
   },

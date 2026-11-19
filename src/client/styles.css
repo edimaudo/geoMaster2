@@ -321,6 +321,8 @@ button:disabled { cursor: not-allowed; opacity: .55; }
 .hub-mode-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 11px; }
 .hub-mode-card { min-height: 106px; display: flex; flex-direction: column; align-items: flex-start; justify-content: center; gap: 8px; position: relative; padding: 16px 18px; border: 1px solid var(--hub-line); border-radius: 11px; background: var(--hub-surface); color: var(--hub-ink); text-align: left; cursor: pointer; transition: border-color .15s ease, transform .15s ease, box-shadow .15s ease; }
 .hub-mode-card:hover { border-color: var(--hub-accent); transform: translateY(-2px); box-shadow: 0 9px 22px rgba(15,23,42,.08); }
+.hub-mode-card:disabled { cursor: not-allowed; opacity: .68; }
+.hub-mode-card:disabled:hover { border-color: var(--hub-line); transform: none; box-shadow: none; }
 .hub-mode-card:focus-visible { outline: 3px solid var(--hub-accent); outline-offset: 3px; }
 .hub-mode-card strong { font-size: 14px; letter-spacing: -.02em; }
 .hub-mode-card span { max-width: 390px; color: var(--hub-muted); font-size: 10px; line-height: 1.45; }

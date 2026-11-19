@@ -142,9 +142,9 @@ Publishing submits the app for Reddit review; it does not bypass the review proc
 npx devvit install r/YOUR_SUBREDDIT geomaster
 ```
 
-## Important deployment distinction
+## Deployment distinction
 
-The production game described in this project runs on Reddit through Devvit. The included `vercel.json` follows the supplied Python Function reference and points to `main.py`, but the current project has no Python `main.py`; its backend is the Devvit Node server. Do not treat the Vercel configuration as a working deployment path for the Devvit game.
+The full five-mode game runs on Reddit through Devvit. The optional Vercel build is a separate static browser build: it supports the four country quiz modes, while Daily Expedition remains available in the Reddit version because it depends on Devvit server APIs, Redis, and Reddit context. Vercel does not run or replace the Devvit server. See [`VERCEL_DEPLOYMENT.md`](VERCEL_DEPLOYMENT.md) for the browser build.
 
 ## Official Devvit references
 

@@ -21,9 +21,11 @@ function formatTime(seconds: number | null): string {
 function ModeHub({
   onDaily,
   onQuiz,
+  dailyAvailable,
 }: {
   onDaily: () => void;
   onQuiz: (mode: QuizModeId) => void;
+  dailyAvailable: boolean;
 }): JSX.Element {
   const [recordsVersion, setRecordsVersion] = useState(0);
   const [confirmClear, setConfirmClear] = useState(false);
@@ -50,9 +52,19 @@ function ModeHub({
       </section>
 
       <section className="hub-mode-grid" aria-label="geoMaster game modes">
-        <button className="hub-mode-card hub-mode-card-expedition" type="button" onClick={onDaily}>
+        <button
+          className="hub-mode-card hub-mode-card-expedition"
+          type="button"
+          onClick={onDaily}
+          disabled={!dailyAvailable}
+          aria-describedby={!dailyAvailable ? 'daily-expedition-platform-note' : undefined}
+        >
           <strong>Daily Expedition</strong>
-          <span>Five shared locations · 12 seconds to place each pin.</span>
+          <span id={!dailyAvailable ? 'daily-expedition-platform-note' : undefined}>
+            {dailyAvailable
+              ? 'Five shared locations · 12 seconds to place each pin.'
+              : 'Play this mode in the Reddit version of geoMaster.'}
+          </span>
         </button>
         {QUIZ_MODES.map((mode) => (
           <button key={mode.id} className="hub-mode-card" type="button" onClick={() => onQuiz(mode.id)}>
@@ -85,6 +97,7 @@ function ModeHub({
 }
 
 export function GeoMasterApp(): JSX.Element {
+  const isVercelWebBuild = import.meta.env.MODE === 'web-preview';
   const [view, setView] = useState<'hub' | 'daily' | 'quiz'>('hub');
   const [quizMode, setQuizMode] = useState<QuizModeId | null>(null);
   const returnToModes = () => {
@@ -97,6 +110,7 @@ export function GeoMasterApp(): JSX.Element {
 
   return (
     <ModeHub
+      dailyAvailable={!isVercelWebBuild}
       onDaily={() => setView('daily')}
       onQuiz={(mode) => { setQuizMode(mode); setView('quiz'); }}
     />

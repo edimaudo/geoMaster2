@@ -45,9 +45,13 @@ npm run build
 
 For setup and deployment, follow [`DEVVIT_SETUP.md`](DEVVIT_SETUP.md).
 
-## Vercel configuration
+## Vercel browser build
 
-`vercel.json` is included as the requested Python Function reference. It targets `main.py` with `@vercel/python`, but this Devvit project does not currently contain a Python handler. The Vercel file does not deploy the Reddit-hosted Devvit app.
+The project includes a separate static browser preview for Vercel. It serves the existing expanded geoMaster mode hub and supports Country Mode, Flag Mode, Capital Mode, and Guesser Mode. Daily Expedition remains available in the Reddit Devvit version because its sessions, timer, scoring, Redis state, and Reddit actions depend on the Devvit server context.
+
+Vercel runs `npm run build:web-preview` and serves `dist/client`. The build uses the existing `src/client/game.html` entry point and produces `dist/client/game.html`; the root rewrite points to that generated file. The Devvit `default` and `game` entry points are unchanged.
+
+See [`VERCEL_DEPLOYMENT.md`](VERCEL_DEPLOYMENT.md) for deployment instructions.
 
 ## Content readiness
 
