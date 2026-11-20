@@ -12,10 +12,10 @@ The five modes are:
 | Mode | Player task | Session rules |
 |---|---|---|
 | **Daily Expedition** | Inspect a geographic clue and place a pin on the world map. | Five shared daily locations; 12 seconds per round; score is based on Haversine distance. |
-| **Country Mode** | Given a country name, choose its flag. | Seven questions; each incorrect answer adds 60 seconds. |
-| **Flag Mode** | Given a flag, choose the country. | Seven questions; each incorrect answer adds 60 seconds. |
-| **Capital Mode** | Given a capital city, choose the country's flag. | Seven questions; each incorrect answer adds 60 seconds. |
-| **Guesser Mode** | Use the capital, population, GDP, and beer-consumption facts to identify the country. | Seven questions; each incorrect answer adds 60 seconds. |
+| **Country** | Given a country name, choose its flag. | Seven questions; each incorrect answer adds 60 seconds. |
+| **Flag** | Given a flag, choose the country. | Seven questions; each incorrect answer adds 60 seconds. |
+| **Capital** | Given a capital city, choose the country's flag. | Seven questions; each incorrect answer adds 60 seconds. |
+| **Guesser** | Use the capital, population, GDP, and beer-consumption facts to identify the country. | Seven questions; each incorrect answer adds 60 seconds. |
 
 The four quiz modes preserve the behavior and source data in the original `edimaudo/geoMaster` repository. The Daily Expedition follows the supplied geoMaster PRD.
 
@@ -26,9 +26,9 @@ There are exactly two Devvit post entry points:
 | Entry point | Reddit presentation | Purpose |
 |---|---|---|
 | `default` | Inline post card | Shows the geoMaster identity and daily challenge status. Its single **Open geoMaster** action opens the expanded game. |
-| `game` | Expanded view | Opens the unified mode hub. The player selects Daily Expedition, Country Mode, Flag Mode, Capital Mode, or Guesser Mode. |
+| `game` | Expanded view | Opens the unified mode hub. The player selects Daily Expedition, Country, Flag, Capital, or Guesser. |
 
-The expanded view is one application. Choosing a mode changes the active screen inside that application; it does not open a second game or a separate entry point. Each mode provides a route back to **All modes**. The daily session remains saved on the server, so returning to Daily Expedition resumes the current round when a session is in progress.
+The expanded view is one application. Choosing a mode changes the active screen inside that application; it does not open a second game or a separate entry point. Each mode provides a route back to **All games**. The daily session remains saved on the server, so returning to Daily Expedition resumes the current round when a session is in progress.
 
 **Launch-flow change:** the original daily-only PRD flow opened Round 1 directly from the inline card. With the four existing quiz modes brought into the same game, the inline CTA now opens the shared mode hub. Daily Expedition remains the featured first option, but players can choose any of the five modes before gameplay. This is a navigation change, not a second game.
 
@@ -60,7 +60,7 @@ A quiz session selects seven countries and provides four answer options per ques
 
 - Use the geoMaster name and visual identity in every mode.
 - Use a single expanded mode hub as the navigation point.
-- Provide a consistent return path to **All modes** from active play and result screens.
+- Provide a consistent return path to **All games** from active play and result screens.
 - Preserve the original quiz modes, the original country values, and per-mode personal-best records.
 - Keep daily-session state and scoring server-authoritative; do not expose unplayed target coordinates to the client.
 
@@ -94,6 +94,6 @@ The current 25-location catalogue and its 25 SVG illustrations remain developmen
 
 ## Vercel browser deployment boundary
 
-The optional Vercel target is a static browser build of the expanded geoMaster mode hub. It uses the same application shell and quiz-mode code, but it does not run the Devvit server. Country Mode, Flag Mode, Capital Mode, and Guesser Mode are available in the browser build. Daily Expedition is disabled there because its authoritative round state, scoring, Redis persistence, Reddit comment sharing, and flair actions require Devvit server APIs and Reddit context. All five modes remain part of the same geoMaster game in the Reddit Devvit deployment.
+The optional Vercel target is a static browser build of the expanded geoMaster mode hub. It uses the same application shell and quiz-mode code, but it does not run the Devvit server. Country, Flag, Capital, and Guesser are available in the browser build. Daily Expedition is disabled there because its authoritative round state, scoring, Redis persistence, Reddit comment sharing, and flair actions require Devvit server APIs and Reddit context. All five modes remain part of the same geoMaster game in the Reddit Devvit deployment.
 
 The Vercel build is configured through `vite.vercel.config.ts`, the `build:web-preview` npm script, and `dist/client/game.html`. It reuses the existing `src/client/game.html` page and writes the static browser output to `dist/client`. The Vercel root rewrite targets that generated `game.html`. It uses Node.js for the build process and static HTML/CSS/JavaScript output; it does not use Python or create a separate Node serverless runtime. The Devvit `default` and `game` entry points are unchanged.

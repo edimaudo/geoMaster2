@@ -16,12 +16,11 @@ export const COUNTRIES = countryData.countries as CountryRecord[];
 export const QUIZ_MODES: Array<{
   id: QuizModeId;
   title: string;
-  description: string;
 }> = [
-  { id: 'country', title: 'Country Mode', description: 'Country name to flag' },
-  { id: 'flag', title: 'Flag Mode', description: 'Flag to country name' },
-  { id: 'capital', title: 'Capital Mode', description: 'Capital to flag' },
-  { id: 'guesser', title: 'Guesser Mode', description: 'Facts to country name' },
+  { id: 'country', title: 'Country' },
+  { id: 'flag', title: 'Flag' },
+  { id: 'capital', title: 'Capital' },
+  { id: 'guesser', title: 'Guesser' },
 ];
 
 export function flagUrl(countryCode: string): string {

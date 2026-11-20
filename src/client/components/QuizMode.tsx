@@ -24,7 +24,7 @@ function readBestTime(mode: QuizModeId): number | null {
   }
 }
 
-function playTone(kind: 'correct' | 'wrong' | 'click', enabled: boolean): void {
+function playTone(kind: 'correct' | 'wrong', enabled: boolean): void {
   if (!enabled) return;
   try {
     const AudioContextConstructor = window.AudioContext;
@@ -32,35 +32,24 @@ function playTone(kind: 'correct' | 'wrong' | 'click', enabled: boolean): void {
     const context = new AudioContextConstructor();
     const oscillator = context.createOscillator();
     const gain = context.createGain();
+    oscillator.type = 'sine';
     oscillator.connect(gain);
     gain.connect(context.destination);
+
     const now = context.currentTime;
-    if (kind === 'correct') {
-      oscillator.type = 'square';
-      oscillator.frequency.setValueAtTime(523.25, now);
-      oscillator.frequency.setValueAtTime(659.25, now + 0.08);
-      oscillator.frequency.setValueAtTime(783.99, now + 0.16);
-      gain.gain.setValueAtTime(0.035, now);
-      gain.gain.exponentialRampToValueAtTime(0.001, now + 0.28);
-      oscillator.start(now);
-      oscillator.stop(now + 0.28);
-    } else if (kind === 'wrong') {
-      oscillator.type = 'sawtooth';
-      oscillator.frequency.setValueAtTime(280, now);
-      oscillator.frequency.linearRampToValueAtTime(140, now + 0.2);
-      gain.gain.setValueAtTime(0.035, now);
-      gain.gain.linearRampToValueAtTime(0.001, now + 0.22);
-      oscillator.start(now);
-      oscillator.stop(now + 0.22);
-    } else {
-      oscillator.type = 'square';
-      oscillator.frequency.setValueAtTime(420, now);
-      gain.gain.setValueAtTime(0.018, now);
-      gain.gain.exponentialRampToValueAtTime(0.001, now + 0.07);
-      oscillator.start(now);
-      oscillator.stop(now + 0.07);
-    }
-    window.setTimeout(() => { void context.close(); }, 400);
+    const duration = kind === 'correct' ? 0.24 : 0.22;
+    const startFrequency = kind === 'correct' ? 660 : 330;
+    const endFrequency = kind === 'correct' ? 880 : 247;
+
+    oscillator.frequency.setValueAtTime(startFrequency, now);
+    oscillator.frequency.exponentialRampToValueAtTime(endFrequency, now + duration * 0.78);
+    gain.gain.setValueAtTime(0.0001, now);
+    gain.gain.linearRampToValueAtTime(0.026, now + 0.025);
+    gain.gain.exponentialRampToValueAtTime(0.0001, now + duration);
+    oscillator.start(now);
+    oscillator.stop(now + duration + 0.01);
+    oscillator.onended = () => { void context.close(); };
+    if (context.state === 'suspended') void context.resume();
   } catch {
     // Audio is an enhancement; quiz play must continue when it is unavailable.
   }
@@ -78,7 +67,7 @@ function Flag({ country, option = false }: { country: CountryRecord; option?: bo
     <img
       className="quiz-flag"
       src={flagUrl(country.code)}
-      alt={option ? 'Flag option' : 'Country flag'}
+      alt={option ? `Flag of ${country.name}` : 'Flag shown in the question'}
       loading="lazy"
       onError={(event) => { event.currentTarget.alt = 'Flag unavailable'; }}
     />
@@ -140,7 +129,6 @@ export function QuizMode({ mode, onBack }: Props): JSX.Element {
 
   const startMode = (selectedMode: QuizModeId) => {
     if (transitionRef.current !== null) window.clearTimeout(transitionRef.current);
-    playTone('click', soundEnabled);
     setQuestions(buildQuizQuestions(selectedMode, 7));
     setQuestionIndex(0);
     setPenalties(0);
@@ -227,25 +215,25 @@ export function QuizMode({ mode, onBack }: Props): JSX.Element {
   return (
     <main className={`quiz-shell ${darkTheme ? 'quiz-dark' : 'quiz-light'} ${largeText ? 'quiz-large-text' : ''}`}>
       <header className="quiz-header">
-        <div className="quiz-brand"><span className="quiz-brand-mark">G</span><span>geoMaster</span><span className="quiz-tag">{currentMode?.title}</span></div>
-        <div className="quiz-preferences" aria-label="Game preferences">
-          <button type="button" onClick={toggleTheme}>{darkTheme ? 'Dark' : 'Light'}</button>
-          <button type="button" onClick={() => setLargeText((value) => !value)}>{largeText ? 'Text + ' : 'Text'}</button>
-          <button type="button" onClick={toggleSound}>Sound {soundEnabled ? 'On' : 'Off'}</button>
+        <div className="quiz-brand"><span>geoMaster</span><span className="quiz-tag">{currentMode?.title}</span></div>
+        <div className="quiz-preferences" role="group" aria-label="Game preferences">
+          <button type="button" onClick={toggleTheme} aria-pressed={darkTheme} aria-label="Color theme">{darkTheme ? 'Dark theme' : 'Light theme'}</button>
+          <button type="button" onClick={() => setLargeText((value) => !value)} aria-pressed={largeText} aria-label="Larger text">{largeText ? 'Standard text' : 'Larger text'}</button>
+          <button type="button" onClick={toggleSound} aria-pressed={soundEnabled}>Sound {soundEnabled ? 'On' : 'Off'}</button>
         </div>
       </header>
 
       {status === 'playing' && currentQuestion && currentMode && (
         <section className="quiz-play">
           <div className="quiz-play-top">
-            <button type="button" className="quiz-back" onClick={backToMenu}>All modes</button>
+            <button type="button" className="quiz-back" onClick={backToMenu}>All games</button>
             <div className="quiz-progress"><strong>Question {questionIndex + 1} / {questions.length}</strong><span>{currentMode.title}</span></div>
-            <div className="quiz-clock"><strong>{formatTime(displayedTime)}</strong><span>elapsed + penalties</span></div>
+            <div className="quiz-clock" role="timer" aria-live="off"><strong>{formatTime(displayedTime)}</strong><span>Elapsed + penalties</span></div>
           </div>
-          <div className="quiz-progress-track"><span style={{ width: `${((questionIndex + 1) / questions.length) * 100}%` }} /></div>
+          <div className="quiz-progress-track" role="progressbar" aria-label="Quiz progress" aria-valuemin={0} aria-valuemax={questions.length} aria-valuenow={questionIndex + 1} aria-valuetext={`Question ${questionIndex + 1} of ${questions.length}`}><span aria-hidden="true" style={{ width: `${((questionIndex + 1) / questions.length) * 100}%` }} /></div>
           <div className="quiz-prompt-card">{renderPrompt()}</div>
           <div className={`quiz-answer-grid ${mode === 'country' || mode === 'capital' ? 'quiz-flag-grid' : ''}`} role="group" aria-label="Answer choices">
-            {currentQuestion.options.map((option, index) => {
+            {currentQuestion.options.map((option) => {
               const selected = feedback?.selectedCode === option.code;
               const isCorrect = option.code === currentQuestion.correct.code;
               const answerClass = feedback
@@ -258,7 +246,7 @@ export function QuizMode({ mode, onBack }: Props): JSX.Element {
                   className={`quiz-answer ${answerClass} ${mode === 'country' || mode === 'capital' ? 'quiz-answer-flag' : ''}`}
                   onClick={() => chooseAnswer(option)}
                   disabled={Boolean(feedback)}
-                  aria-label={mode === 'country' || mode === 'capital' ? `Flag option ${index + 1}` : option.name}
+                  aria-label={option.name}
                 >
                   {mode === 'country' || mode === 'capital'
                     ? <Flag country={option} option />
@@ -283,19 +271,18 @@ export function QuizMode({ mode, onBack }: Props): JSX.Element {
           <h1>{newRecord ? 'A new record.' : 'Quiz complete.'}</h1>
           <div className="quiz-final-time"><strong>{formatTime(finalTime)}</strong><span>final time</span></div>
           <div className="quiz-result-details">
-            <div><span>Mode</span><strong>{currentMode.title}</strong></div>
+            <div><span>Game</span><strong>{currentMode.title}</strong></div>
             <div><span>Questions</span><strong>{questions.length}</strong></div>
             <div><span>Penalties</span><strong>{formatTime(penalties)}</strong></div>
             <div><span>Personal best</span><strong>{bestTime === null ? '—' : formatTime(bestTime)}</strong></div>
           </div>
           <div className="quiz-result-actions">
             <button type="button" className="quiz-primary" onClick={() => startMode(mode)}>Play again</button>
-            <button type="button" className="quiz-secondary" onClick={backToMenu}>All modes</button>
+            <button type="button" className="quiz-secondary" onClick={backToMenu}>All games</button>
           </div>
         </section>
       )}
 
-      <footer className="quiz-footer"><span>geoMaster</span><span>Country facts from geoMaster’s original dataset</span></footer>
     </main>
   );
 }

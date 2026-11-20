@@ -1,6 +1,6 @@
 # geoMaster
 
-geoMaster is one Reddit geography game with five modes: Daily Expedition, Country Mode, Flag Mode, Capital Mode, and Guesser Mode.
+geoMaster is one Reddit geography game with five modes: Daily Expedition, Country, Flag, Capital, and Guesser.
 
 ## Reddit layout
 
@@ -14,10 +14,10 @@ The modes are screens inside one application. They are not separate games or sep
 ## Modes
 
 - **Daily Expedition:** five daily geographic locations, a 12-second pin-placement round, Haversine scoring, reveal, and a shared subreddit result summary.
-- **Country Mode:** country name to flag.
-- **Flag Mode:** flag to country name.
-- **Capital Mode:** capital city to flag.
-- **Guesser Mode:** country facts to country name.
+- **Country:** country name to flag.
+- **Flag:** flag to country name.
+- **Capital:** capital city to flag.
+- **Guesser:** country facts to country name.
 
 The four quiz modes retain the 56 country records and quiz behavior from the original `edimaudo/geoMaster` repository. Each quiz session has seven questions, and incorrect answers add 60 seconds.
 
@@ -47,7 +47,7 @@ For setup and deployment, follow [`DEVVIT_SETUP.md`](DEVVIT_SETUP.md).
 
 ## Vercel browser build
 
-The project includes a separate static browser preview for Vercel. It serves the existing expanded geoMaster mode hub and supports Country Mode, Flag Mode, Capital Mode, and Guesser Mode. Daily Expedition remains available in the Reddit Devvit version because its sessions, timer, scoring, Redis state, and Reddit actions depend on the Devvit server context.
+The project includes a separate static browser preview for Vercel. It serves the existing expanded geoMaster mode hub and supports Country, Flag, Capital, and Guesser. Daily Expedition remains available in the Reddit Devvit version because its sessions, timer, scoring, Redis state, and Reddit actions depend on the Devvit server context.
 
 Vercel runs `npm run build:web-preview` and serves `dist/client`. The build uses the existing `src/client/game.html` entry point and produces `dist/client/game.html`; the root rewrite points to that generated file. The Devvit `default` and `game` entry points are unchanged.
 

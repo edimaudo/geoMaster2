@@ -84,7 +84,7 @@ export function ResultCard({
 
   return (
     <main className="result-shell">
-      {onBack && <button className="result-back" type="button" onClick={onBack}>← All modes</button>}
+      {onBack && <button className="result-back" type="button" onClick={onBack}>← All games</button>}
       <header className="result-heading">
         <div>
           <span className="eyebrow">EXPEDITION COMPLETE</span>
@@ -166,7 +166,6 @@ export function ResultCard({
       )}
 
       {actionError && <p className="action-error" role="alert">{actionError}</p>}
-      <footer className="result-footer"><span>geoMaster</span><span>Same five coordinates. One shared world.</span></footer>
     </main>
   );
 }

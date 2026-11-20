@@ -100,7 +100,7 @@ Press `Ctrl+C` in the terminal to end the playtest session. The installed playte
 2. Confirm the inline post displays the geoMaster name and the daily challenge status.
 3. Select **Open geoMaster**. Confirm the expanded view shows one mode selector.
 4. Open **Daily Expedition** and test pin placement, the 12-second timer, round reveal, and final summary.
-5. Return to **All modes** and test Country Mode, Flag Mode, Capital Mode, and Guesser Mode.
+5. Return to **All games** and test Country, Flag, Capital, and Guesser.
 6. Confirm each quiz contains seven questions and that an incorrect answer adds 60 seconds.
 7. Check that each mode can return to the single mode selector.
 8. Confirm the displayed averages are currently geoMaster-wide, not subreddit-specific. The current server keys are not partitioned by subreddit.

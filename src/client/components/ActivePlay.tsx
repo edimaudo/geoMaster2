@@ -63,7 +63,6 @@ export function ActivePlay({ onBack }: Props = {}): JSX.Element {
   const [busy, setBusy] = useState(false);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
-  const [dismissHint, setDismissHint] = useState(false);
   const [shared, setShared] = useState(false);
   const submitLock = useRef(false);
   const nextTimeout = useRef<number | null>(null);
@@ -265,7 +264,7 @@ export function ActivePlay({ onBack }: Props = {}): JSX.Element {
   const summaryData = data && data.status === 'COMPLETED' ? data : null;
 
   if (loading) {
-    return <main className="game-loading">{onBack && <button className="result-back" type="button" onClick={onBack}>← All modes</button>}<div className="loading-mark">G</div><p>Loading Daily Expedition…</p><div className="loading-line" /></main>;
+    return <main className="game-loading" aria-live="polite">{onBack && <button className="result-back" type="button" onClick={onBack}>← All games</button>}<p>Loading Daily Expedition…</p><div className="loading-line" /></main>;
   }
 
   if (summaryData) {
@@ -288,21 +287,21 @@ export function ActivePlay({ onBack }: Props = {}): JSX.Element {
   }
 
   if (error && !round && !revealed) {
-    return <main className="game-error"><span className="brand-mark">G</span><h1>Daily Expedition paused</h1><p role="alert">{error}</p><div className="game-error-actions"><button className="primary-button" type="button" onClick={() => window.location.reload()}>Reload geoMaster</button>{onBack && <button className="secondary-button" type="button" onClick={onBack}>All modes</button>}</div></main>;
+    return <main className="game-error"><h1>Daily Expedition paused</h1><p role="alert">{error}</p><div className="game-error-actions"><button className="primary-button" type="button" onClick={() => window.location.reload()}>Reload geoMaster</button>{onBack && <button className="secondary-button" type="button" onClick={onBack}>All games</button>}</div></main>;
   }
 
   return (
     <main className="game-shell">
       <header className="game-hud">
-        {onBack && <button className="game-mode-back" type="button" onClick={onBack}>Modes</button>}
-        <div className="round-progress" aria-label={`Round ${round?.round ?? revealed?.round ?? 1} of 5`}>
+        {onBack && <button className="game-mode-back" type="button" onClick={onBack}>All games</button>}
+        <div className="round-progress" role="progressbar" aria-label="Expedition progress" aria-valuemin={0} aria-valuemax={5} aria-valuenow={results.length} aria-valuetext={`${results.length} of 5 coordinates completed`}>
           {[1, 2, 3, 4, 5].map((number) => {
             const done = results.some((item) => item.round === number);
             const active = round?.round === number && !revealed;
-            return <span key={number} className={`${done ? 'done' : ''} ${active ? 'current' : ''}`} aria-label={`Round ${number}${done ? ', complete' : active ? ', current' : ''}`} />;
+            return <span key={number} className={`${done ? 'done' : ''} ${active ? 'current' : ''}`} aria-hidden="true" />;
           })}
         </div>
-        <div className={`timer-block ${timerTone}`} aria-label={`${timeValue} seconds remaining`}>
+        <div className={`timer-block ${timerTone}`} role="timer" aria-live="off" aria-label={`${timeValue} seconds remaining`}>
           <div className="timer-track"><span style={{ width: `${ratio}%` }} /></div>
           <strong>{timeValue}<small>s</small></strong>
         </div>
@@ -327,22 +326,16 @@ export function ActivePlay({ onBack }: Props = {}): JSX.Element {
         <>
           <section className="clue-stage">
             {round ? <ClueViewer round={round} /> : <div className="clue-placeholder">Loading next coordinate…</div>}
-            {round && !dismissHint && results.length === 0 && (
-              <button className="first-pin-hint" type="button" onClick={() => setDismissHint(true)}>
-                Tap map to drop pin <span aria-hidden="true">×</span>
-              </button>
-            )}
           </section>
           <section className="map-stage">
-            <div className="map-stage-heading"><div><span className="eyebrow">WORLD ATLAS</span><strong>Where are we?</strong></div><span className="map-coordinate-readout">{pin ? `${coord(pin.lat, 'lat')} · ${coord(pin.lng, 'lng')}` : 'No pin placed'}</span></div>
-            <VectorMap pin={pin} interactive onFirstPointer={() => setDismissHint(true)} onPinChange={(point) => { setPin(point); setDismissHint(true); }} />
+            <div className="map-stage-heading"><div><span className="eyebrow">WORLD ATLAS</span><strong>Where are we?</strong></div><span className="map-coordinate-readout" aria-live="polite">{pin ? `${coord(pin.lat, 'lat')} · ${coord(pin.lng, 'lng')}` : 'No pin placed'}</span></div>
+            <VectorMap pin={pin} interactive onPinChange={setPin} />
           </section>
-          <footer className="game-action-footer">
+          <div className="game-action-bar">
             <button className="primary-button lock-button" type="button" onClick={() => void submitGuess(pin)} disabled={!pin || busy || !round}>
               {busy ? 'Locking coordinate…' : 'Lock In Pin'} <span aria-hidden="true">↗</span>
             </button>
-            <span className="footer-instruction">{pin ? 'Your coral pin is set. Lock it in.' : 'Tap the map to place your coral pin.'}</span>
-          </footer>
+          </div>
         </>
       )}
     </main>

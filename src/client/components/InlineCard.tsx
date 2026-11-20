@@ -52,7 +52,7 @@ export function InlineCard(): JSX.Element {
   return (
     <main className="inline-shell" aria-label="geoMaster game post">
       <header className="inline-header">
-        <div className="brand-lockup"><span className="brand-mark" aria-hidden="true">G</span><span>geoMaster</span></div>
+        <div className="brand-lockup">geoMaster</div>
         <span className="dispatch-chip">Dispatch #{String(data?.dispatchNumber ?? 1).padStart(3, '0')}</span>
         <time className="inline-date">{data ? dateStamp(data.date) : 'UTC Daily'}</time>
       </header>

@@ -11,7 +11,6 @@ interface Props {
   reveal?: RoundResult | null;
   interactive?: boolean;
   onPinChange?: (point: LatLng) => void;
-  onFirstPointer?: () => void;
   compact?: boolean;
 }
 
@@ -30,7 +29,7 @@ function projectedPath(lat: number, lng: number, project: ReturnType<typeof geoM
   return project([lng, lat]) as [number, number] | null;
 }
 
-export function VectorMap({ pin = null, reveal = null, interactive = false, onPinChange, onFirstPointer, compact = false }: Props): JSX.Element {
+export function VectorMap({ pin = null, reveal = null, interactive = false, onPinChange, compact = false }: Props): JSX.Element {
   const svgRef = useRef<SVGSVGElement>(null);
   const dragRef = useRef<DragState | null>(null);
   const pointersRef = useRef<Map<number, PointerPoint>>(new Map());
@@ -83,9 +82,32 @@ export function VectorMap({ pin = null, reveal = null, interactive = false, onPi
     return { lat, lng };
   };
 
+  const handleMapKeyDown = (event: React.KeyboardEvent<SVGSVGElement>) => {
+    if (!interactive || reveal || !['ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight'].includes(event.key)) return;
+    event.preventDefault();
+    const current = pin ?? { lat: 0, lng: 0 };
+    const step = event.shiftKey ? 10 : 1;
+    let lat = current.lat;
+    let lng = current.lng;
+    if (event.key === 'ArrowUp') lat += step;
+    if (event.key === 'ArrowDown') lat -= step;
+    if (event.key === 'ArrowRight') lng += step;
+    if (event.key === 'ArrowLeft') lng -= step;
+    if (lng > 180) lng -= 360;
+    if (lng < -180) lng += 360;
+    const nextPoint = { lat: Math.max(-85, Math.min(85, lat)), lng };
+    const projected = projectedPath(nextPoint.lat, nextPoint.lng, projection);
+    if (projected) {
+      setPan((currentPan) => ({
+        x: currentPan.x + WIDTH / 2 - projected[0],
+        y: currentPan.y + HEIGHT / 2 - projected[1],
+      }));
+    }
+    onPinChange?.(nextPoint);
+  };
+
   const handlePointerDown = (event: React.PointerEvent<SVGSVGElement>) => {
     if (!interactive || reveal) return;
-    onFirstPointer?.();
     pointersRef.current.set(event.pointerId, { x: event.clientX, y: event.clientY });
     event.currentTarget.setPointerCapture(event.pointerId);
 
@@ -167,8 +189,12 @@ export function VectorMap({ pin = null, reveal = null, interactive = false, onPi
         ref={svgRef}
         className="world-map"
         viewBox={`0 0 ${WIDTH} ${HEIGHT}`}
-        role="img"
-        aria-label="World map with country borders and latitude-longitude graticule"
+        role={interactive && !reveal ? 'application' : 'img'}
+        aria-label={interactive && !reveal
+          ? 'Interactive world map. Use arrow keys to move the pin one degree at a time; hold Shift to move ten degrees. You can also tap or click the map and drag to pan.'
+          : 'World map with country borders and latitude-longitude graticule'}
+        tabIndex={interactive && !reveal ? 0 : undefined}
+        onKeyDown={handleMapKeyDown}
         onPointerDown={handlePointerDown}
         onPointerMove={handlePointerMove}
         onPointerUp={handlePointerUp}
@@ -195,13 +221,13 @@ export function VectorMap({ pin = null, reveal = null, interactive = false, onPi
         {userXY && <g className="user-marker" transform={`translate(${userXY[0]},${userXY[1]})`} filter="url(#pin-shadow)"><path d="M0 17C-4 9 -15 -1 -15 -11A15 15 0 1 1 15 -11C15 -1 4 9 0 17Z" /><circle cy="-11" r="5" /></g>}
       </svg>
       {interactive && !reveal && (
-        <div className="map-controls" aria-label="Map zoom controls">
+        <div className="map-controls" role="group" aria-label="Map zoom controls">
           <button type="button" onClick={() => setZoom((value) => Math.max(0.8, +(value - 0.2).toFixed(2)))} aria-label="Zoom out">−</button>
           <button type="button" onClick={() => setZoom((value) => Math.min(2.6, +(value + 0.2).toFixed(2)))} aria-label="Zoom in">+</button>
           <button type="button" onClick={() => { setZoom(1); setPan({ x: 0, y: 0 }); }} aria-label="Reset map view">↺</button>
         </div>
       )}
-      <div className="map-legend" aria-hidden="true">
+      <div className="map-legend">
         {reveal ? <><span><i className="legend-dot legend-user" />Your pin</span><span><i className="legend-dot legend-target" />Target</span><span><i className="legend-dot legend-crowd" />Crowd</span></> : <span><i className="legend-dot legend-user" />Your pin</span>}
       </div>
       {interactive && !pin && !reveal && <div className="map-prompt" aria-hidden="true">Tap anywhere to drop your pin</div>}

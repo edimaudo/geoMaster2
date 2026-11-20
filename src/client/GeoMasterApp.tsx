@@ -3,6 +3,13 @@ import { ActivePlay } from './components/ActivePlay';
 import { QuizMode } from './components/QuizMode';
 import { QUIZ_MODES, type QuizModeId } from '../shared/countries';
 
+const QUIZ_MODE_DESCRIPTIONS: Record<QuizModeId, string> = {
+  country: 'Find the flag for each country.',
+  flag: 'Identify the country shown by each flag.',
+  capital: 'Match each capital to its flag.',
+  guesser: 'Use country facts to identify the country.',
+};
+
 function readBestTime(mode: QuizModeId): number | null {
   try {
     const value = Number(localStorage.getItem(`geomaster_${mode}`));
@@ -29,7 +36,7 @@ function ModeHub({
 }): JSX.Element {
   const [recordsVersion, setRecordsVersion] = useState(0);
   const [confirmClear, setConfirmClear] = useState(false);
-  const records = QUIZ_MODES.map((mode) => ({ ...mode, best: readBestTime(mode.id) }));
+  const records = QUIZ_MODES.map((mode) => ({ ...mode, displayTitle: mode.title, best: readBestTime(mode.id) }));
 
   const clearRecords = () => {
     try {
@@ -44,11 +51,11 @@ function ModeHub({
   return (
     <main className="hub-shell">
       <header className="hub-header">
-        <div className="hub-brand"><span className="hub-brand-mark" aria-hidden="true">G</span><span>geoMaster</span></div>
+        <div className="hub-brand">geoMaster</div>
       </header>
 
       <section className="hub-intro">
-        <h1>Choose a mode</h1>
+        <h1>Choose a Game</h1>
       </section>
 
       <section className="hub-mode-grid" aria-label="geoMaster game modes">
@@ -63,30 +70,30 @@ function ModeHub({
           <span id={!dailyAvailable ? 'daily-expedition-platform-note' : undefined}>
             {dailyAvailable
               ? 'Five shared locations · 12 seconds to place each pin.'
-              : 'Play this mode in the Reddit version of geoMaster.'}
+              : 'Available in the Reddit app.'}
           </span>
         </button>
         {QUIZ_MODES.map((mode) => (
           <button key={mode.id} className="hub-mode-card" type="button" onClick={() => onQuiz(mode.id)}>
             <strong>{mode.title}</strong>
-            <span>{mode.description} · 7 questions · +60 seconds per wrong answer.</span>
+            <span>{QUIZ_MODE_DESCRIPTIONS[mode.id]}</span>
           </button>
         ))}
       </section>
 
       <section className="hub-records" aria-label="Quiz mode personal bests">
         <div className="hub-record-heading">
-          <h2>Personal best times</h2>
+          <h2>Quiz personal bests</h2>
           <button type="button" onClick={() => setConfirmClear(true)}>Clear records</button>
         </div>
         <div className="hub-record-grid" key={recordsVersion}>
           {records.map((mode) => (
-            <div key={mode.id}><span>{mode.title}</span><strong>{formatTime(mode.best)}</strong></div>
+            <div key={mode.id}><span>{mode.displayTitle}</span><strong>{formatTime(mode.best)}</strong></div>
           ))}
         </div>
         {confirmClear && (
-          <div className="hub-clear-confirm" role="alertdialog" aria-label="Confirm clearing records">
-            <span>Clear all four quiz records?</span>
+          <div className="hub-clear-confirm" role="group" aria-labelledby="clear-records-title">
+            <span id="clear-records-title">Clear all four quiz personal bests?</span>
             <button type="button" onClick={clearRecords}>Clear</button>
             <button type="button" onClick={() => setConfirmClear(false)}>Cancel</button>
           </div>
