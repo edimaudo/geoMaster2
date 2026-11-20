@@ -196,8 +196,9 @@ export async function buildInitResponse(
     ? {
         round: selected.round,
         tier: selected.tier,
-        clueUrl: `/clues/${selected.clueAsset}`,
-        clueAlt: selected.clueAlt,
+        country: selected.country,
+        continent: selected.continent,
+        clueType: selected.clueType,
       }
     : null;
 
@@ -305,8 +306,9 @@ function publicRound(puzzle: DailyPuzzle, roundNumber: number): PublicRound | nu
   return {
     round: item.round,
     tier: item.tier,
-    clueUrl: `/clues/${item.clueAsset}`,
-    clueAlt: item.clueAlt,
+    country: item.country,
+    continent: item.continent,
+    clueType: item.clueType,
   };
 }
 

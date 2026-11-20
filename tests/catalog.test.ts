@@ -21,7 +21,8 @@ describe('starter content catalog', () => {
       expect(location.lat).toBeLessThanOrEqual(90);
       expect(location.lng).toBeGreaterThanOrEqual(-180);
       expect(location.lng).toBeLessThanOrEqual(180);
-      expect(location.clueAsset).toMatch(/^c_[a-f0-9]+\.svg$/);
+      expect(location.continent.length).toBeGreaterThan(0);
+      expect(location.clueType.length).toBeGreaterThan(0);
     }
   });
 });

@@ -11,7 +11,7 @@ The five modes are:
 
 | Mode | Player task | Session rules |
 |---|---|---|
-| **Daily Expedition** | Inspect a geographic clue and place a pin on the world map. | Five shared daily locations; 12 seconds per round; score is based on Haversine distance. |
+| **Daily Expedition** | Use continent, country, and feature-category clues to identify a location and place a pin on the world map. | Five shared daily locations; 12 seconds per round; score is based on Haversine distance. |
 | **Country** | Given a country name, choose its flag. | Seven questions; each incorrect answer adds 60 seconds. |
 | **Flag** | Given a flag, choose the country. | Seven questions; each incorrect answer adds 60 seconds. |
 | **Capital** | Given a capital city, choose the country's flag. | Seven questions; each incorrect answer adds 60 seconds. |
@@ -41,7 +41,7 @@ Do not add additional Devvit entry points for individual modes or introduce gene
 Daily Expedition is the location-pin challenge defined by the supplied PRD:
 
 - Every player in a subreddit receives the same five deterministic locations for a UTC date.
-- Each round presents a vetted geographic clue and an interactive world vector map.
+- Each round presents the same structured text clues (continent, country, and feature category) and an interactive world vector map. The synthetic SVG illustrations have been removed.
 - The player has 12 seconds to place and lock a pin. A round with no pin scores zero.
 - The server calculates great-circle distance with the Haversine formula using an Earth radius of 6,371 km.
 - A guess within 25 km receives 1,000 points. Beyond 25 km, the PRD's exponential distance-decay formula applies.
@@ -68,7 +68,7 @@ A quiz session selects seven countries and provides four answer options per ques
 
 The original 56-country dataset is appropriate for the four quiz modes. It does not contain geographic coordinates or satellite/street-level clue imagery and must not be presented as the Daily Expedition location catalogue.
 
-The current development package contains a separate 25-location starter catalogue and 25 synthetic SVG clue illustrations. These are development placeholders, not a verified 365+ location catalogue or real imagery of the named places. They must not be described as production-ready geographic clues. Before public launch, replace or validate the starter content against the PRD's human-reviewed location and imagery requirements, including image licensing and removal of location metadata from distributed files.
+The current development package contains a separate 25-location starter catalogue. It is not a verified 365+ location catalogue. Before public launch, expand and human-review the location data, validate coordinates and clue categories, and ensure the daily puzzle does not expose target coordinates to the client before a guess is submitted.
 
 The daily reminder control is currently disabled because notification access is not available in this project. It is not an implemented opt-in feature. In addition, the current daily-post idempotency, play-count, crowd, and leaderboard Redis keys are not partitioned by subreddit. As a result, the current server does not provide independent daily posts and community statistics for multiple subreddit installations. Add subreddit-scoped keys before claiming multi-subreddit support. The inline card and results screen therefore label the current averages as geoMaster/all-player aggregates, not subreddit averages.
 
@@ -90,7 +90,7 @@ The daily reminder control is currently disabled because notification access is 
 
 The package contains the unified entrypoint structure, the five-mode selector, the four country quiz modes, and the Daily Expedition client/server flow. The package has not been fully built or playtested in a Reddit environment in this delivery, so those runtime checks remain outstanding.
 
-The current 25-location catalogue and its 25 SVG illustrations remain development placeholders. The daily reminder control is disabled and is not an implemented notification opt-in. The current Redis keys for daily-post idempotency, play counts, crowd aggregates, and leaderboards are not partitioned by subreddit. Those values are therefore geoMaster-wide rather than independent for each subreddit. Do not describe them as subreddit-specific until those keys and the post-creation flow are updated to include the subreddit.
+The current 25-location catalogue remains a development placeholder; the synthetic SVG clue illustrations have been removed from both browser and Devvit gameplay. The daily reminder control is disabled and is not an implemented notification opt-in. The current Redis keys for daily-post idempotency, play counts, crowd aggregates, and leaderboards are not partitioned by subreddit. Those values are therefore geoMaster-wide rather than independent for each subreddit. Do not describe them as subreddit-specific until those keys and the post-creation flow are updated to include the subreddit.
 
 ## Vercel browser deployment boundary
 

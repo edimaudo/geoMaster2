@@ -31,7 +31,6 @@ The four quiz modes retain the 56 country records and quiz behavior from the ori
 - `src/client/components/QuizMode.tsx`: the four country quiz modes.
 - `assets/countries.json`: 56 source country records from the original project.
 - `assets/geo_catalog.json`: separate 25-location development catalogue for Daily Expedition.
-- `assets/clues/`: synthetic SVG development illustrations. These are not geographically accurate production imagery.
 
 ## Development checks
 
@@ -55,4 +54,4 @@ See [`VERCEL_DEPLOYMENT.md`](VERCEL_DEPLOYMENT.md) for deployment instructions.
 
 ## Content readiness
 
-The original country dataset and the Daily Expedition location catalogue are separate. The current Daily Expedition catalogue has 25 development locations, and the SVG clue illustrations are synthetic placeholders. Both require content review and replacement with verified location data and properly licensed geographic imagery before a public launch. Daily-post idempotency, play counts, crowd aggregates, and leaderboards are currently app-wide rather than subreddit-scoped; multi-subreddit support is not complete. The daily reminder control is disabled and does not currently register notifications.
+The original country dataset and the Daily Expedition location catalogue are separate. The current Daily Expedition catalogue has 25 development locations and requires content review, coordinate validation, and expansion before a public launch. Gameplay uses structured text clues (continent, country, and feature category) rather than synthetic SVG illustrations. Daily-post idempotency, play counts, crowd aggregates, and leaderboards are currently app-wide rather than subreddit-scoped; multi-subreddit support is not complete. The daily reminder control is disabled and does not currently register notifications.

@@ -44,11 +44,11 @@ export function generateDailyPuzzle(date: string, seed: number, catalog: GeoLoca
       locationId: selected.id,
       locationName: selected.name,
       country: selected.country,
+      continent: selected.continent,
+      clueType: selected.clueType,
       lat: selected.lat,
       lng: selected.lng,
       tier: selected.tier,
-      clueAsset: selected.clueAsset,
-      clueAlt: selected.clueAlt,
       triviaTitle: selected.triviaTitle,
       triviaNote: selected.triviaNote,
     });

@@ -1,7 +1,6 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
 import catalog from '../../../assets/geo_catalog.json';
 import type { GeoLocation, RoundResult } from '../../shared/types';
-import { ClueViewer } from './ClueViewer';
 import { RevealArcOverlay } from './RevealArcOverlay';
 import { VectorMap } from './VectorMap';
 
@@ -87,7 +86,16 @@ export function LocalExpedition({ onBack }: { onBack?: () => void }): JSX.Elemen
       <div className="expedition-answer"><strong>{current.name}, {current.country}</strong><span>{result.distanceKm === null ? 'Time expired · no pin placed' : `${Math.round(result.distanceKm).toLocaleString()} km from your pin`}</span><b>{result.roundScore.toLocaleString()} points</b></div>
       <button className="primary-button next-button" type="button" onClick={advance}>{index === 4 ? 'See results' : 'Next location'} <span aria-hidden="true">→</span></button>
     </section> : <>
-      <section className="clue-stage"><ClueViewer round={{round:index+1,tier:current.tier,clueUrl:`/clues/${current.clueAsset}`,clueAlt:current.clueAlt}}/></section>
+      <section className="expedition-clue-card" aria-labelledby="expedition-clue-title">
+        <div className="expedition-clue-heading"><span>Daily Expedition</span><span>Round {index + 1} of 5</span></div>
+        <h1 id="expedition-clue-title">Find this location</h1>
+        <p>Use the geographic clues to narrow down the location, then place your pin on the map.</p>
+        <dl className="expedition-clue-facts">
+          <div><dt>Continent</dt><dd>{current.continent}</dd></div>
+          <div><dt>Country</dt><dd>{current.country}</dd></div>
+          <div><dt>Feature</dt><dd>{current.clueType.replaceAll('-', ' ')}</dd></div>
+        </dl>
+      </section>
       <section className="map-stage"><div className="map-stage-heading"><strong>Place the pin</strong><span className="map-coordinate-readout">{pin ? `${pin.lat.toFixed(2)}°, ${pin.lng.toFixed(2)}°` : 'Select a location on the map'}</span></div><VectorMap pin={pin} interactive onPinChange={setPin}/></section>
       <div className="game-action-bar"><button className="primary-button lock-button" type="button" disabled={!pin} onClick={() => submit(pin)}>Lock in location <span aria-hidden="true">→</span></button></div>
     </>}

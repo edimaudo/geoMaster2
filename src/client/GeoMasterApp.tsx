@@ -59,9 +59,9 @@ function ModeHub({
         <h1>Choose a Game</h1>
       </section>
 
-      <section className="hub-mode-grid" aria-label="geoMaster game modes">
+      <section className="hub-mode-list" aria-label="geoMaster game modes">
         <button
-          className="hub-mode-card hub-mode-card-expedition"
+          className="hub-mode-row"
           type="button"
           onClick={onDaily}
           disabled={!dailyAvailable}
@@ -70,13 +70,13 @@ function ModeHub({
           <strong>Daily Expedition</strong>
           <span id={!dailyAvailable ? 'daily-expedition-platform-note' : undefined}>
             {dailyAvailable
-              ? 'Five locations. Place a pin on the world map.'
-              : 'Five locations. Place a pin on the world map.'}
+              ? 'Identify five locations using geographic clues and map placement.'
+              : 'Identify five locations using geographic clues and map placement.'}
           </span>
         </button>
         {QUIZ_MODES.map((mode) => (
-          <button key={mode.id} className="hub-mode-card" type="button" onClick={() => onQuiz(mode.id)}>
-            <strong>{mode.title}</strong>
+          <button key={mode.id} className="hub-mode-row" type="button" onClick={() => onQuiz(mode.id)}>
+            <strong>{mode.title.replace(/\s+Mode$/i, '')}</strong>
             <span>{QUIZ_MODE_DESCRIPTIONS[mode.id]}</span>
           </button>
         ))}

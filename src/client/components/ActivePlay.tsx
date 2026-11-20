@@ -7,7 +7,6 @@ import type {
   RoundStartResponse,
   RoundSubmitResponse,
 } from '../../shared/types';
-import { ClueViewer } from './ClueViewer';
 import { ResultCard } from './ResultCard';
 import { RevealArcOverlay } from './RevealArcOverlay';
 import { VectorMap } from './VectorMap';
@@ -324,8 +323,15 @@ export function ActivePlay({ onBack }: Props = {}): JSX.Element {
         </section>
       ) : (
         <>
-          <section className="clue-stage">
-            {round ? <ClueViewer round={round} /> : <div className="clue-placeholder">Loading next coordinate…</div>}
+          <section className="expedition-clue-card" aria-labelledby="expedition-clue-title">
+            <div className="expedition-clue-heading"><span>Daily Expedition</span><span>Round {round?.round ?? '—'} of 5</span></div>
+            <h1 id="expedition-clue-title">Find this location</h1>
+            <p>Use the geographic clues to narrow down the location, then place your pin on the map.</p>
+            {round ? <dl className="expedition-clue-facts">
+              <div><dt>Continent</dt><dd>{round.continent}</dd></div>
+              <div><dt>Country</dt><dd>{round.country}</dd></div>
+              <div><dt>Feature</dt><dd>{round.clueType.replaceAll('-', ' ')}</dd></div>
+            </dl> : <p>Loading the next location…</p>}
           </section>
           <section className="map-stage">
             <div className="map-stage-heading"><div><strong>Where are we?</strong></div><span className="map-coordinate-readout" aria-live="polite">{pin ? `${coord(pin.lat, 'lat')} · ${coord(pin.lng, 'lng')}` : 'No pin placed'}</span></div>

@@ -9,8 +9,6 @@ export interface GeoLocation {
   lat: number;
   lng: number;
   tier: 1 | 2 | 3 | 4 | 5;
-  clueAsset: string;
-  clueAlt: string;
   clueType: string;
   triviaTitle?: string;
   triviaNote?: string;
@@ -22,11 +20,11 @@ export interface PuzzleRound {
   locationId: string;
   locationName: string;
   country: string;
+  continent: string;
+  clueType: string;
   lat: number;
   lng: number;
   tier: number;
-  clueAsset: string;
-  clueAlt: string;
   triviaTitle?: string;
   triviaNote?: string;
 }
@@ -82,8 +80,9 @@ export interface UserStats {
 export interface PublicRound {
   round: number;
   tier: number;
-  clueUrl: string;
-  clueAlt: string;
+  country: string;
+  continent: string;
+  clueType: string;
 }
 
 export interface InitResponse {
