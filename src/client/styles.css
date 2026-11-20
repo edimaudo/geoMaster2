@@ -603,3 +603,91 @@ button:disabled { cursor: not-allowed; opacity: .55; }
   .game-shell button:focus-visible,
   .result-shell button:focus-visible { outline-color: #67e8f9; }
 }
+
+/* geoMaster visual system: cartographic, restrained, and legible */
+:root {
+  --navy: #18323d;
+  --navy-soft: #244653;
+  --paper: #f3f5f2;
+  --surface: #ffffff;
+  --surface-muted: #e8eeeb;
+  --ink: #182b33;
+  --muted: #52656b;
+  --line: #cbd6d3;
+  --cyan: #087f8c;
+  --coral: #c75a46;
+  --amber: #9a6415;
+  --map-water: #dce9e8;
+  --map-grid: #a9c1c0;
+  --map-contour: #729795;
+  --map-land: #e8eee5;
+  --map-border: #aebfba;
+  --shadow: 0 10px 26px rgba(24,43,51,.09);
+}
+.eyebrow, .quiz-kicker { display: none !important; }
+.hub-shell { max-width: 980px; gap: 30px; }
+.hub-header { border-bottom: 1px solid var(--line); }
+.hub-brand { font-size: 21px; letter-spacing: -.035em; }
+.hub-mode-grid { gap: 14px; }
+.hub-mode-card { border-radius: 5px; border-width: 1px; box-shadow: none; }
+.hub-mode-card:hover { transform: none; box-shadow: none; background: var(--surface-muted); }
+.hub-mode-card-expedition { background: var(--surface); border-color: var(--hub-line); }
+.hub-mode-card span { color: var(--muted); }
+.hub-record-grid div { border-radius: 4px; }
+.primary-button { background: #176b76; border-radius: 5px; box-shadow: none; }
+.primary-button:hover:not(:disabled) { background: #105762; transform: none; box-shadow: none; }
+.quiz-shell { --quiz-bg:#f3f5f2; --quiz-surface:#fff; --quiz-ink:#182b33; --quiz-muted:#52656b; --quiz-line:#cbd6d3; --quiz-accent:#087f8c; --quiz-soft:#e8eeeb; }
+.quiz-shell.quiz-dark { --quiz-bg:#171f27; --quiz-surface:#222d37; --quiz-ink:#f0f4f5; --quiz-muted:#c0cbd0; --quiz-line:#46545f; --quiz-accent:#72c8d0; --quiz-soft:#2c3944; }
+.quiz-answer, .quiz-prompt-card, .quiz-result-details div { border-radius: 5px; }
+.quiz-answer:not(:disabled):hover { background: var(--quiz-soft); }
+.quiz-primary { background: #176b76; border-radius: 5px; }
+.quiz-secondary { border-radius: 5px; }
+.game-shell, .result-shell { background: var(--paper); }
+.game-hud { border-color: var(--line); }
+.map-wrap { border-radius: 5px; }
+.clue-viewer, .clue-viewer img { border-radius: 5px; }
+.game-action-bar { padding-top: 4px; }
+.expedition-shell { max-width: 1080px; }
+.expedition-round-title { font-size: 17px; font-weight: 700; }
+.expedition-answer { display:flex; flex-wrap:wrap; justify-content:space-between; gap:8px 16px; align-items:center; padding:14px 16px; background:var(--surface); border:1px solid var(--line); border-radius:5px; color:var(--ink); }
+.expedition-answer span { color:var(--muted); }
+.expedition-total { font-size:clamp(42px,8vw,68px); font-weight:800; letter-spacing:-.05em; margin:8px 0; }
+.expedition-total span { font-size:18px; color:var(--muted); letter-spacing:0; }
+.expedition-results { display:grid; gap:8px; margin:20px 0; }
+.expedition-results div { display:grid; grid-template-columns:100px 1fr auto auto; gap:12px; align-items:center; padding:13px; border:1px solid var(--line); background:var(--surface); border-radius:4px; }
+.expedition-results span { color:var(--muted); }
+.expedition-summary { width:min(100%,850px); min-height:100dvh; margin:auto; padding:24px clamp(14px,3vw,28px); color:var(--ink); background:var(--paper); }
+button:focus-visible, .world-map:focus-visible { outline:3px solid #087f8c; outline-offset:3px; }
+@media (prefers-color-scheme: dark) {
+  :root {
+    color-scheme: dark;
+    --navy:#dce8eb; --navy-soft:#c6d5d9;
+    --paper:#171f27; --surface:#222d37; --surface-muted:#2c3944;
+    --ink:#f0f4f5; --muted:#c0cbd0; --line:#46545f;
+    --cyan:#72c8d0; --coral:#f08a76; --amber:#e9bd70;
+    --map-water:#1c3440; --map-grid:#385765; --map-contour:#527582;
+    --map-land:#425b52; --map-border:#78918a;
+    --shadow:0 10px 26px rgba(0,0,0,.25);
+  }
+  .hub-mode-card-expedition { background:var(--surface); }
+  .primary-button, .quiz-primary { background:#176b76; color:#fff; }
+  .timer-block { color:var(--ink); }
+  .timer-track { background:#46545f; }
+  .unit-switch button.active { background:#dce8eb; color:#17252c; }
+  .secondary-button { background:var(--surface-muted); color:var(--ink); border-color:var(--line); }
+  .round-progress span { background:#46545f; }
+  .round-progress span.done { background:#72c8d0; }
+  .map-legend { background:rgba(23,31,39,.94); color:#f0f4f5; }
+  .map-prompt { color:#f0f4f5; background:rgba(34,45,55,.96); border-color:#60727c; }
+  .reveal-overlay, .selected-round-panel { background:var(--surface); }
+  .score-hero { background:#263f4b; }
+  .quiz-primary { background:#176b76; }
+}
+@media (max-width: 620px) {
+  .expedition-results div { grid-template-columns:1fr auto; }
+  .expedition-results div span:first-child { grid-column:1; }
+  .expedition-results div strong { grid-column:1; }
+  .expedition-results div span:nth-of-type(2), .expedition-results div b { grid-column:2; }
+  .expedition-results div span:nth-of-type(2) { grid-row:1; }
+  .expedition-results div b { grid-row:2; }
+}

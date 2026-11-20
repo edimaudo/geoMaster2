@@ -43,7 +43,7 @@ export function InlineCard(): JSX.Element {
       requestExpandedMode(event.nativeEvent, 'game', { title: 'geoMaster' });
     } catch (reason) {
       console.error('[geoMaster] could not open the game', reason);
-      setError('Reddit could not open geoMaster. Try again.');
+      setError('geoMaster could not be opened. Try again.');
     }
   };
 
@@ -63,7 +63,7 @@ export function InlineCard(): JSX.Element {
         <div className="preview-orbit orbit-two" aria-hidden="true" />
         <div className="preview-crosshair" aria-hidden="true"><span /><span /></div>
         <div className="preview-caption">
-          <span className="eyebrow">THE DAILY EXPEDITION</span>
+          
           <h1>Five places.<br />One world.</h1>
           <p>{loading ? 'Preparing today’s coordinates…' : statusLine}</p>
         </div>

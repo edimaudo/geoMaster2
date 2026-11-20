@@ -47,7 +47,7 @@ For setup and deployment, follow [`DEVVIT_SETUP.md`](DEVVIT_SETUP.md).
 
 ## Vercel browser build
 
-The project includes a separate static browser preview for Vercel. It serves the existing expanded geoMaster mode hub and supports Country, Flag, Capital, and Guesser. Daily Expedition remains available in the Reddit Devvit version because its sessions, timer, scoring, Redis state, and Reddit actions depend on the Devvit server context.
+The project includes a Vercel browser build with all five modes. Daily Expedition runs locally in the browser using a date-seeded set of five locations, a 12-second pin timer, map reveals, and distance scoring. Browser-preview results are local to that session and do not use Reddit accounts, Redis, community averages, or shared leaderboards. The Devvit deployment retains its server-backed session and community features.
 
 Vercel runs `npm run build:web-preview` and serves `dist/client`. The build uses the existing `src/client/game.html` entry point and produces `dist/client/game.html`; the root rewrite points to that generated file. The Devvit `default` and `game` entry points are unchanged.
 

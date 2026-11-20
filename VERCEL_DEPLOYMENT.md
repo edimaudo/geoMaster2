@@ -6,7 +6,7 @@ This deploys the browser preview of **geoMaster** to Vercel. It is separate from
 
 The Vercel build reuses the existing expanded-game page at `src/client/game.html`. Vite writes the built page to `dist/client/game.html`, along with its JavaScript, CSS, and public assets. There is no `main.py`, extra `vercel.html`, or separate Node.js serverless function.
 
-The browser preview supports Country, Flag, Capital, and Guesser. Daily Expedition remains available in the Reddit Devvit version because its round state, scoring, Redis persistence, Reddit sharing, and flair actions require Devvit server APIs and Reddit context.
+The browser preview supports all five game modes. Daily Expedition uses a client-side daily location set, local timer, map placement, reveal, and distance scoring. It does not require Devvit APIs, Reddit identity, or Redis. Browser-preview scores are not synchronized across devices and do not participate in the Devvit community leaderboard or Reddit sharing features.
 
 ## Vercel configuration
 

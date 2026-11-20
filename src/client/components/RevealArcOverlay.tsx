@@ -12,7 +12,7 @@ export function RevealArcOverlay({ result, units }: Props): JSX.Element {
       </div>
       <div className="reveal-detail">
         <span>{result.locationName}, {result.country}</span>
-        <span>{result.crowdAvgDistanceKm === null ? 'Community average pending' : `Subreddit avg · ${formatDistance(result.crowdAvgDistanceKm, units)}`}</span>
+        <span>{result.crowdAvgDistanceKm === null ? 'Community average pending' : `Community avg · ${formatDistance(result.crowdAvgDistanceKm, units)}`}</span>
       </div>
     </div>
   );

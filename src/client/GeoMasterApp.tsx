@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { ActivePlay } from './components/ActivePlay';
+import { LocalExpedition } from './components/LocalExpedition';
 import { QuizMode } from './components/QuizMode';
 import { QUIZ_MODES, type QuizModeId } from '../shared/countries';
 
@@ -69,8 +70,8 @@ function ModeHub({
           <strong>Daily Expedition</strong>
           <span id={!dailyAvailable ? 'daily-expedition-platform-note' : undefined}>
             {dailyAvailable
-              ? 'Five shared locations · 12 seconds to place each pin.'
-              : 'Available in the Reddit app.'}
+              ? 'Five locations. Place a pin on the world map.'
+              : 'Five locations. Place a pin on the world map.'}
           </span>
         </button>
         {QUIZ_MODES.map((mode) => (
@@ -112,12 +113,14 @@ export function GeoMasterApp(): JSX.Element {
     setView('hub');
   };
 
-  if (view === 'daily') return <ActivePlay onBack={returnToModes} />;
+  if (view === 'daily') return isVercelWebBuild
+    ? <LocalExpedition onBack={returnToModes} />
+    : <ActivePlay onBack={returnToModes} />;
   if (view === 'quiz' && quizMode) return <QuizMode mode={quizMode} onBack={returnToModes} />;
 
   return (
     <ModeHub
-      dailyAvailable={!isVercelWebBuild}
+      dailyAvailable={true}
       onDaily={() => setView('daily')}
       onQuiz={(mode) => { setQuizMode(mode); setView('quiz'); }}
     />

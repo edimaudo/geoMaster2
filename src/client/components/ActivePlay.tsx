@@ -315,7 +315,7 @@ export function ActivePlay({ onBack }: Props = {}): JSX.Element {
 
       {revealed ? (
         <section className="reveal-stage" aria-label={`Round ${revealed.round} revealed`}>
-          <div className="reveal-map-head"><span className="eyebrow">COORDINATE REVEALED</span><span>R{revealed.round} / 05</span></div>
+          <div className="reveal-map-head"><span>R{revealed.round} / 05</span></div>
           <VectorMap reveal={revealed} />
           <RevealArcOverlay result={revealed} units={units} />
           <button className="primary-button next-button" type="button" onClick={() => { clearNextTimeout(); if (finalResponse?.session.status === 'COMPLETED') finishSummary(finalResponse); else if (revealed.round === 5) { void api<InitResponse>('/api/init').then((latest) => { setData(latest); setResults(latest.results); setRevealed(null); setRound(null); }).catch((reason: unknown) => setError(reason instanceof Error ? reason.message : 'The atlas summary could not load.')); } else void startNextRound(); }}>
@@ -328,7 +328,7 @@ export function ActivePlay({ onBack }: Props = {}): JSX.Element {
             {round ? <ClueViewer round={round} /> : <div className="clue-placeholder">Loading next coordinate…</div>}
           </section>
           <section className="map-stage">
-            <div className="map-stage-heading"><div><span className="eyebrow">WORLD ATLAS</span><strong>Where are we?</strong></div><span className="map-coordinate-readout" aria-live="polite">{pin ? `${coord(pin.lat, 'lat')} · ${coord(pin.lng, 'lng')}` : 'No pin placed'}</span></div>
+            <div className="map-stage-heading"><div><strong>Where are we?</strong></div><span className="map-coordinate-readout" aria-live="polite">{pin ? `${coord(pin.lat, 'lat')} · ${coord(pin.lng, 'lng')}` : 'No pin placed'}</span></div>
             <VectorMap pin={pin} interactive onPinChange={setPin} />
           </section>
           <div className="game-action-bar">

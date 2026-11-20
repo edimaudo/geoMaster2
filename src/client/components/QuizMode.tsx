@@ -267,7 +267,7 @@ export function QuizMode({ mode, onBack }: Props): JSX.Element {
 
       {status === 'results' && currentMode && finalTime !== null && (
         <section className="quiz-results">
-          <span className="quiz-kicker">{newRecord ? 'NEW PERSONAL BEST' : 'SESSION COMPLETE'}</span>
+          
           <h1>{newRecord ? 'A new record.' : 'Quiz complete.'}</h1>
           <div className="quiz-final-time"><strong>{formatTime(finalTime)}</strong><span>final time</span></div>
           <div className="quiz-result-details">

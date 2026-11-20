@@ -87,7 +87,7 @@ export function ResultCard({
       {onBack && <button className="result-back" type="button" onClick={onBack}>← All games</button>}
       <header className="result-heading">
         <div>
-          <span className="eyebrow">EXPEDITION COMPLETE</span>
+          
           <h1>Your atlas is ready.</h1>
           <p>Dispatch #{String(data.dispatchNumber).padStart(3, '0')} · {data.date} UTC</p>
         </div>
@@ -107,7 +107,7 @@ export function ResultCard({
       </section>
 
       <section className="atlas-inspection">
-        <div className="section-head"><div><span className="eyebrow">FIVE COORDINATES</span><h2>Inspect your route</h2></div><span className="muted-small">Select a round</span></div>
+        <div className="section-head"><div><h2>Inspect your route</h2></div><span className="muted-small">Select a round</span></div>
         <div className="round-strip" role="tablist" aria-label="Inspect individual rounds">
           {results.map((result) => (
             <button
@@ -128,7 +128,7 @@ export function ResultCard({
           <div className="selected-round-panel" role="tabpanel">
             <VectorMap reveal={selected} compact />
             <div className="selected-location">
-              <div><span className="eyebrow">ROUND {selected.round} · TARGET</span><h3>{selected.locationName}</h3><p>{selected.country}</p></div>
+              <div><h3>{selected.locationName}</h3><p>{selected.country}</p></div>
               <div className="coordinates-line">{selected.targetLat.toFixed(2)}° {selected.targetLat >= 0 ? 'N' : 'S'} · {Math.abs(selected.targetLng).toFixed(2)}° {selected.targetLng >= 0 ? 'E' : 'W'}</div>
               <div className="comparison-line">
                 <span>Your error <strong>{formatDistance(selected.distanceKm, units)}</strong></span>
@@ -144,7 +144,7 @@ export function ResultCard({
       {!data.isArchive && (
         <section className="community-actions">
           <div className="action-row">
-            <div><strong>Share your expedition</strong><p>Post your score grid to this Reddit thread.</p></div>
+            <div><strong>Share your expedition</strong><p>Add your score to the expedition discussion.</p></div>
             <button className="primary-button action-button" type="button" onClick={handleShare} disabled={hasCommented || shareBusy}>
               {hasCommented ? 'Posted ✓' : shareBusy ? 'Posting…' : 'Post Result to Comments'}
             </button>
@@ -161,7 +161,7 @@ export function ResultCard({
             <div><strong>Daily dispatch reminder</strong><p>Get notified when tomorrow’s coordinates arrive at 00:00 UTC.</p></div>
             <button className="secondary-button reminder-button" type="button" disabled aria-disabled="true">Unavailable</button>
           </div>
-          <p className="platform-note">Reddit push notifications require access to the gated Devvit notifications beta.</p>
+          <p className="platform-note">Daily reminders are not available yet.</p>
         </section>
       )}
 
