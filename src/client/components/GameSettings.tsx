@@ -16,11 +16,7 @@ interface SettingsProps {
 export function SettingsButton({ onClick }: { onClick: () => void }): JSX.Element {
   return (
     <button className="gm-settings-trigger" type="button" onClick={onClick} aria-label="Open settings" title="Settings">
-      <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
-        <path d="M12 8.2a3.8 3.8 0 1 0 0 7.6 3.8 3.8 0 0 0 0-7.6Z" />
-        <path d="m19.4 13.5 1.1.8-1.1 1.9-1.3-.5a7.8 7.8 0 0 1-1.6.9l-.2 1.4h-2.2l-.3-1.4a7.8 7.8 0 0 1-1.7 0l-.8 1.2-1.9-1.1.5-1.3a7.8 7.8 0 0 1-.9-1.6l-1.4-.2v-2.2l1.4-.3a7.8 7.8 0 0 1 .7-1.5l-.8-1.2 1.1-1.9 1.3.5a7.8 7.8 0 0 1 1.6-.9l.2-1.4h2.2l.3 1.4a7.8 7.8 0 0 1 1.6.7l1.2-.8 1.9 1.1-.5 1.3a7.8 7.8 0 0 1 .9 1.6l1.4.2v2.2l-1.4.3a7.8 7.8 0 0 1-.3.8Z" />
-      </svg>
-      <span>Settings</span>
+      Settings
     </button>
   );
 }

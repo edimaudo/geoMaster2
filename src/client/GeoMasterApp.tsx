@@ -12,13 +12,6 @@ const QUIZ_MODE_DESCRIPTIONS: Record<QuizModeId, string> = {
   guesser: 'Read the clues. Work out the country.',
 };
 
-const QUIZ_MODE_SYMBOLS: Record<QuizModeId, string> = {
-  country: '🌍',
-  flag: '🚩',
-  capital: '🏛️',
-  guesser: '🔎',
-};
-
 interface AppSettings {
   soundEnabled: boolean;
   theme: ThemeChoice;
@@ -79,7 +72,7 @@ function ModeHub({
   return (
     <main className="hub-shell">
       <header className="hub-header">
-        <div className="hub-brand"><span className="hub-brand-mark" aria-hidden="true">✦</span><span className="hub-brand-word">geo<span>Master</span></span></div>
+        <div className="hub-brand" aria-label="geoMaster">geoMaster</div>
       </header>
 
       <section className="hub-intro">
@@ -89,15 +82,11 @@ function ModeHub({
 
       <section className="hub-mode-list" aria-label="geoMaster game modes">
         <button className="hub-mode-row mode-expedition" type="button" onClick={onDaily}>
-          <span className="hub-mode-symbol" aria-hidden="true">🧭</span>
           <span className="hub-mode-copy"><strong>Daily Expedition</strong><span>Pin five places before the clock runs out.</span></span>
-          <span className="hub-mode-arrow" aria-hidden="true">→</span>
         </button>
         {QUIZ_MODES.map((mode) => (
           <button key={mode.id} className={`hub-mode-row mode-${mode.id}`} type="button" onClick={() => onQuiz(mode.id)}>
-            <span className="hub-mode-symbol" aria-hidden="true">{QUIZ_MODE_SYMBOLS[mode.id]}</span>
             <span className="hub-mode-copy"><strong>{mode.title.replace(/\s+Mode$/i, '')}</strong><span>{QUIZ_MODE_DESCRIPTIONS[mode.id]}</span></span>
-            <span className="hub-mode-arrow" aria-hidden="true">→</span>
           </button>
         ))}
       </section>
@@ -122,9 +111,7 @@ function ModeHub({
       </section>
 
       <button className="hub-settings-button" type="button" onClick={onOpenSettings}>
-        <span className="hub-settings-symbol" aria-hidden="true">⚙</span>
         <span>Settings</span>
-        <span className="hub-settings-arrow" aria-hidden="true">→</span>
       </button>
     </main>
   );
@@ -149,7 +136,7 @@ export function GeoMasterApp(): JSX.Element {
     }
     document.documentElement.dataset.theme = settings.theme;
     document.documentElement.dataset.textSize = settings.textSize;
-    document.querySelector<HTMLMetaElement>('meta[name="theme-color"]')?.setAttribute('content', settings.theme === 'dark' ? '#171d3b' : '#fff8e9');
+    document.querySelector<HTMLMetaElement>('meta[name="theme-color"]')?.setAttribute('content', settings.theme === 'dark' ? '#19192d' : '#f5f1e9');
   }, [settings]);
 
   const updateSetting = <K extends keyof AppSettings>(key: K, value: AppSettings[K]) => {

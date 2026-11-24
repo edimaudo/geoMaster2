@@ -28,8 +28,7 @@ describe('geo calculations', () => {
   });
 
   it('formats distances in the selected unit', () => {
-    expect(formatDistance(100, 'km')).toBe('100 km');
-    expect(formatDistance(100, 'mi')).toBe('62 mi');
-    expect(formatDistance(null, 'km')).toBe('No pin');
+    expect(formatDistance(100)).toBe('100 km');
+    expect(formatDistance(null)).toBe('No pin');
   });
 });

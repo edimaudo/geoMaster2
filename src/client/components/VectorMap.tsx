@@ -216,9 +216,9 @@ export function VectorMap({ pin = null, reveal = null, interactive = false, onPi
         </g>
         <rect width={WIDTH} height={HEIGHT} fill="url(#map-contours)" opacity=".42" pointerEvents="none" />
         {arcPath && <path className="geodesic-arc" d={arcPath} />}
-        {crowdXY && <g className="crowd-marker" transform={`translate(${crowdXY[0]},${crowdXY[1]})`}><circle r="12" /><circle r="4" /></g>}
-        {targetXY && <g className="target-marker" transform={`translate(${targetXY[0]},${targetXY[1]})`}><circle r="15" /><path d="M0 -7V7M-7 0H7" /></g>}
-        {userXY && <g className="user-marker" transform={`translate(${userXY[0]},${userXY[1]})`} filter="url(#pin-shadow)"><path d="M0 17C-4 9 -15 -1 -15 -11A15 15 0 1 1 15 -11C15 -1 4 9 0 17Z" /><circle cy="-11" r="5" /></g>}
+        {crowdXY && <g className="crowd-marker" transform={`translate(${crowdXY[0]},${crowdXY[1]})`}><circle r="8" /><circle r="2.5" /></g>}
+        {targetXY && <g className="target-marker" transform={`translate(${targetXY[0]},${targetXY[1]})`}><circle r="9" /><path d="M0 -4V4M-4 0H4" /></g>}
+        {userXY && <g className="user-marker" transform={`translate(${userXY[0]},${userXY[1]})`}><path d="M0 9C-2.5 5 -8 0 -8 -5A8 8 0 1 1 8 -5C8 0 2.5 5 0 9Z" /><circle cy="-5" r="2.4" /></g>}
       </svg>
       {interactive && !reveal && (
         <div className="map-controls" role="group" aria-label="Map zoom controls">

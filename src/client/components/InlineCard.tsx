@@ -73,7 +73,7 @@ export function InlineCard(): JSX.Element {
       <footer className="inline-footer">
         {error && <p className="inline-error" role="alert">{error}</p>}
         <button className="primary-button inline-play" type="button" onClick={handlePlay}>
-          <span>{playLabel}</span><span aria-hidden="true">↗</span>
+          <span>{playLabel}</span>
         </button>
         <div className="inline-bottom-row">
           <div className="inline-meta">

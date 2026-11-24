@@ -15,8 +15,6 @@ interface Props {
   hasCommented: boolean;
   onShared: () => void;
   onBack?: () => void;
-  units: 'km' | 'mi';
-  onUnitsChange: (value: 'km' | 'mi') => void;
   onOpenSettings: () => void;
 }
 
@@ -44,8 +42,6 @@ export function ResultCard({
   hasCommented,
   onShared,
   onBack,
-  units,
-  onUnitsChange,
   onOpenSettings,
 }: Props): JSX.Element {
   const [selectedRound, setSelectedRound] = useState(1);
@@ -88,16 +84,11 @@ export function ResultCard({
   return (
     <main className="result-shell">
       <GameHeader mode="Daily Expedition" onOpenSettings={onOpenSettings} />
-      {onBack && <button className="result-back" type="button" onClick={onBack}>← All games</button>}
       <header className="result-heading">
         <div>
           
           <h1>Your atlas is ready.</h1>
           <p>Dispatch #{String(data.dispatchNumber).padStart(3, '0')} · {data.date} UTC</p>
-        </div>
-        <div className="unit-switch" role="group" aria-label="Distance units">
-          <button type="button" className={units === 'km' ? 'active' : ''} onClick={() => onUnitsChange('km')} aria-pressed={units === 'km'}>km</button>
-          <button type="button" className={units === 'mi' ? 'active' : ''} onClick={() => onUnitsChange('mi')} aria-pressed={units === 'mi'}>mi</button>
         </div>
       </header>
 
@@ -106,7 +97,7 @@ export function ResultCard({
         <div className="score-details">
           <div><strong>{percentileTop === null || data.isArchive ? '—' : `Top ${percentileTop}%`}</strong><span>{data.isArchive ? 'Practice archive' : `${playerCount.toLocaleString()} geoMaster players`}</span></div>
           <div><strong>{streak} day{streak === 1 ? '' : 's'}</strong><span>Current streak</span></div>
-          <div><strong>{avgKm === null ? 'No pins' : formatDistance(avgKm, units)}</strong><span>Average error</span></div>
+          <div><strong>{avgKm === null ? 'No pins' : formatDistance(avgKm)}</strong><span>Average error</span></div>
         </div>
       </section>
 
@@ -123,8 +114,8 @@ export function ResultCard({
               onClick={() => setSelectedRound(result.round)}
             >
               <span>R{result.round}</span>
-              <strong>{formatDistance(result.distanceKm, units)}</strong>
-              <i aria-hidden="true">{result.distanceKm === null ? '×' : result.roundScore >= 900 ? '◎' : '⌖'}</i>
+              <strong>{formatDistance(result.distanceKm)}</strong>
+              
             </button>
           ))}
         </div>
@@ -135,8 +126,8 @@ export function ResultCard({
               <div><h3>{selected.locationName}</h3><p>{selected.country}</p></div>
               <div className="coordinates-line">{selected.targetLat.toFixed(2)}° {selected.targetLat >= 0 ? 'N' : 'S'} · {Math.abs(selected.targetLng).toFixed(2)}° {selected.targetLng >= 0 ? 'E' : 'W'}</div>
               <div className="comparison-line">
-                <span>Your error <strong>{formatDistance(selected.distanceKm, units)}</strong></span>
-                <span>All players <strong>{formatDistance(selected.crowdAvgDistanceKm, units)}</strong></span>
+                <span>Your error <strong>{formatDistance(selected.distanceKm)}</strong></span>
+                <span>All players <strong>{formatDistance(selected.crowdAvgDistanceKm)}</strong></span>
                 <span>Round score <strong>{selected.roundScore.toLocaleString()}</strong></span>
               </div>
               {selected.triviaTitle && <div className="trivia-note"><strong>{selected.triviaTitle}</strong><p>{selected.triviaNote}</p></div>}
@@ -170,6 +161,7 @@ export function ResultCard({
       )}
 
       {actionError && <p className="action-error" role="alert">{actionError}</p>}
+      {onBack && <button className="primary-button expedition-back-button" type="button" onClick={onBack}>Back to games</button>}
     </main>
   );
 }

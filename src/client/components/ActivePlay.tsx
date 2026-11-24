@@ -60,7 +60,6 @@ export function ActivePlay({ onBack, onOpenSettings, soundEnabled }: Props): JSX
   const [finalResponse, setFinalResponse] = useState<RoundSubmitResponse | null>(null);
   const [remaining, setRemaining] = useState(12_000);
   const [deadlineAt, setDeadlineAt] = useState<number | null>(null);
-  const [units, setUnits] = useState<'km' | 'mi'>('km');
   const [busy, setBusy] = useState(false);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
@@ -266,7 +265,7 @@ export function ActivePlay({ onBack, onOpenSettings, soundEnabled }: Props): JSX
   const summaryData = data && data.status === 'COMPLETED' ? data : null;
 
   if (loading) {
-    return <main className="game-shell game-loading" aria-live="polite"><GameHeader mode="Daily Expedition" onOpenSettings={onOpenSettings} />{onBack && <button className="result-back" type="button" onClick={onBack}>← All games</button>}<p>Loading Daily Expedition…</p><div className="loading-line" /></main>;
+    return <main className="game-shell game-loading" aria-live="polite"><GameHeader mode="Daily Expedition" onOpenSettings={onOpenSettings} />{onBack && <button className="result-back" type="button" onClick={onBack}>All games</button>}<p>Loading Daily Expedition…</p><div className="loading-line" /></main>;
   }
 
   if (summaryData) {
@@ -282,8 +281,6 @@ export function ActivePlay({ onBack, onOpenSettings, soundEnabled }: Props): JSX
         hasCommented={shared || summaryData.hasCommented}
         onShared={() => setShared(true)}
         onBack={onBack}
-        units={units}
-        onUnitsChange={setUnits}
         onOpenSettings={onOpenSettings}
       />
     );
@@ -309,10 +306,6 @@ export function ActivePlay({ onBack, onOpenSettings, soundEnabled }: Props): JSX
           <div className="timer-track"><span style={{ width: `${ratio}%` }} /></div>
           <strong>{timeValue}<small>s</small></strong>
         </div>
-        <div className="unit-switch" role="group" aria-label="Distance units">
-          <button type="button" className={units === 'km' ? 'active' : ''} onClick={() => setUnits('km')} aria-pressed={units === 'km'}>km</button>
-          <button type="button" className={units === 'mi' ? 'active' : ''} onClick={() => setUnits('mi')} aria-pressed={units === 'mi'}>mi</button>
-        </div>
       </div>
 
       {error && <p className="game-inline-error" role="alert">{error}</p>}
@@ -321,9 +314,9 @@ export function ActivePlay({ onBack, onOpenSettings, soundEnabled }: Props): JSX
         <section className="reveal-stage" aria-label={`Round ${revealed.round} revealed`}>
           <div className="reveal-map-head"><span>R{revealed.round} / 05</span></div>
           <VectorMap reveal={revealed} />
-          <RevealArcOverlay result={revealed} units={units} />
+          <RevealArcOverlay result={revealed} />
           <button className="primary-button next-button" type="button" onClick={() => { clearNextTimeout(); if (finalResponse?.session.status === 'COMPLETED') finishSummary(finalResponse); else if (revealed.round === 5) { void api<InitResponse>('/api/init').then((latest) => { setData(latest); setResults(latest.results); setRevealed(null); setRound(null); }).catch((reason: unknown) => setError(reason instanceof Error ? reason.message : 'The atlas summary could not load.')); } else void startNextRound(); }}>
-            {revealed.round === 5 ? 'View Atlas Summary' : 'Next Coordinate'} <span aria-hidden="true">→</span>
+            {revealed.round === 5 ? 'View Atlas Summary' : 'Next Coordinate'}
           </button>
         </section>
       ) : (
@@ -344,7 +337,7 @@ export function ActivePlay({ onBack, onOpenSettings, soundEnabled }: Props): JSX
           </section>
           <div className="game-action-bar">
             <button className="primary-button lock-button" type="button" onClick={() => void submitGuess(pin)} disabled={!pin || busy || !round}>
-              {busy ? 'Locking coordinate…' : 'Lock In Pin'} <span aria-hidden="true">↗</span>
+              {busy ? 'Locking coordinate…' : 'Lock In Pin'}
             </button>
           </div>
         </>

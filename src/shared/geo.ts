@@ -54,8 +54,7 @@ export function sphericalCentroid(points: LatLng[]): LatLng | null {
   };
 }
 
-export function formatDistance(distanceKm: number | null, units: 'km' | 'mi'): string {
+export function formatDistance(distanceKm: number | null): string {
   if (distanceKm === null || !Number.isFinite(distanceKm)) return 'No pin';
-  if (units === 'mi') return `${Math.round(distanceKm * 0.621371).toLocaleString()} mi`;
   return `${Math.round(distanceKm).toLocaleString()} km`;
 }

@@ -28,6 +28,7 @@ The four quiz modes retain the 56 country records and quiz behavior from the ori
 - `devvit.json`: only the `default` and `game` post entry points.
 - `src/client/GeoMasterApp.tsx`: expanded mode hub, shared settings state, and mode routing.
 - `src/client/components/GameSettings.tsx`: central Sound, Appearance, and Text size settings.
+- `src/client/styles.css`: shared Inter-based visual system and responsive layouts for all five game modes.
 - `src/client/components/ActivePlay.tsx`: Daily Expedition.
 - `src/client/components/QuizMode.tsx`: the four country quiz modes.
 - `assets/countries.json`: 56 source country records from the original project.
