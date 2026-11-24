@@ -1,4 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
+import { GameHeader } from './GameHeader';
+import { playGameTone } from './audio';
 import {
   buildQuizQuestions,
   QUIZ_MODES,
@@ -24,37 +26,6 @@ function readBestTime(mode: QuizModeId): number | null {
   }
 }
 
-function playTone(kind: 'correct' | 'wrong', enabled: boolean): void {
-  if (!enabled) return;
-  try {
-    const AudioContextConstructor = window.AudioContext;
-    if (!AudioContextConstructor) return;
-    const context = new AudioContextConstructor();
-    const oscillator = context.createOscillator();
-    const gain = context.createGain();
-    oscillator.type = 'sine';
-    oscillator.connect(gain);
-    gain.connect(context.destination);
-
-    const now = context.currentTime;
-    const duration = kind === 'correct' ? 0.24 : 0.22;
-    const startFrequency = kind === 'correct' ? 660 : 330;
-    const endFrequency = kind === 'correct' ? 880 : 247;
-
-    oscillator.frequency.setValueAtTime(startFrequency, now);
-    oscillator.frequency.exponentialRampToValueAtTime(endFrequency, now + duration * 0.78);
-    gain.gain.setValueAtTime(0.0001, now);
-    gain.gain.linearRampToValueAtTime(0.026, now + 0.025);
-    gain.gain.exponentialRampToValueAtTime(0.0001, now + duration);
-    oscillator.start(now);
-    oscillator.stop(now + duration + 0.01);
-    oscillator.onended = () => { void context.close(); };
-    if (context.state === 'suspended') void context.resume();
-  } catch {
-    // Audio is an enhancement; quiz play must continue when it is unavailable.
-  }
-}
-
 function formatTime(seconds: number): string {
   const safe = Math.max(0, Math.floor(seconds));
   const minutes = Math.floor(safe / 60);
@@ -74,9 +45,9 @@ function Flag({ country, option = false }: { country: CountryRecord; option?: bo
   );
 }
 
-interface Props { mode: QuizModeId; onBack: () => void; }
+interface Props { mode: QuizModeId; onBack: () => void; soundEnabled: boolean; onOpenSettings: () => void; }
 
-export function QuizMode({ mode, onBack }: Props): JSX.Element {
+export function QuizMode({ mode, onBack, soundEnabled, onOpenSettings }: Props): JSX.Element {
   const [status, setStatus] = useState<QuizStatus>('playing');
   const [questions, setQuestions] = useState<Question[]>([]);
   const [questionIndex, setQuestionIndex] = useState(0);
@@ -87,13 +58,6 @@ export function QuizMode({ mode, onBack }: Props): JSX.Element {
   const [finalTime, setFinalTime] = useState<number | null>(null);
   const [bestTime, setBestTime] = useState<number | null>(null);
   const [newRecord, setNewRecord] = useState(false);
-  const [soundEnabled, setSoundEnabled] = useState(() => {
-    try { return localStorage.getItem('geomaster_sound') !== 'false'; } catch { return true; }
-  });
-  const [darkTheme, setDarkTheme] = useState(() => {
-    try { return localStorage.getItem('geomaster_theme') !== 'light'; } catch { return true; }
-  });
-  const [largeText, setLargeText] = useState(false);
   const transitionRef = useRef<number | null>(null);
   const answerLocked = useRef(false);
 
@@ -153,7 +117,7 @@ export function QuizMode({ mode, onBack }: Props): JSX.Element {
     const isCorrect = country.code === currentQuestion.correct.code;
     if (!isCorrect) setPenalties((value) => value + 60);
     setFeedback({ isCorrect, selectedCode: country.code });
-    playTone(isCorrect ? 'correct' : 'wrong', soundEnabled);
+    playGameTone(isCorrect ? 'correct' : 'wrong', soundEnabled);
 
     transitionRef.current = window.setTimeout(() => {
       if (questionIndex + 1 >= questions.length) {
@@ -174,22 +138,6 @@ export function QuizMode({ mode, onBack }: Props): JSX.Element {
     onBack();
   };
 
-
-  const toggleSound = () => {
-    setSoundEnabled((enabled) => {
-      const next = !enabled;
-      try { localStorage.setItem('geomaster_sound', String(next)); } catch { /* Storage is optional. */ }
-      return next;
-    });
-  };
-
-  const toggleTheme = () => {
-    setDarkTheme((dark) => {
-      const next = !dark;
-      try { localStorage.setItem('geomaster_theme', next ? 'dark' : 'light'); } catch { /* Storage is optional. */ }
-      return next;
-    });
-  };
 
   const renderPrompt = () => {
     if (!currentQuestion) return null;
@@ -213,15 +161,8 @@ export function QuizMode({ mode, onBack }: Props): JSX.Element {
   };
 
   return (
-    <main className={`quiz-shell ${darkTheme ? 'quiz-dark' : 'quiz-light'} ${largeText ? 'quiz-large-text' : ''}`}>
-      <header className="quiz-header">
-        <div className="quiz-brand"><span>geoMaster</span><span className="quiz-tag">{currentMode?.title}</span></div>
-        <div className="quiz-preferences" role="group" aria-label="Game preferences">
-          <button type="button" onClick={toggleTheme} aria-pressed={darkTheme} aria-label="Color theme">{darkTheme ? 'Dark theme' : 'Light theme'}</button>
-          <button type="button" onClick={() => setLargeText((value) => !value)} aria-pressed={largeText} aria-label="Larger text">{largeText ? 'Standard text' : 'Larger text'}</button>
-          <button type="button" onClick={toggleSound} aria-pressed={soundEnabled}>Sound {soundEnabled ? 'On' : 'Off'}</button>
-        </div>
-      </header>
+    <main className="quiz-shell">
+      <GameHeader mode={currentMode?.title.replace(/\s+Mode$/i, '') || 'Quiz'} onOpenSettings={onOpenSettings} />
 
       {status === 'playing' && currentQuestion && currentMode && (
         <section className="quiz-play">

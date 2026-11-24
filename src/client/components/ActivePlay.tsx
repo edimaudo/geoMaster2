@@ -10,6 +10,8 @@ import type {
 import { ResultCard } from './ResultCard';
 import { RevealArcOverlay } from './RevealArcOverlay';
 import { VectorMap } from './VectorMap';
+import { GameHeader } from './GameHeader';
+import { playGameTone } from './audio';
 
 interface LatLng { lat: number; lng: number }
 interface ApiError { error?: string }
@@ -47,9 +49,9 @@ function coord(value: number, axis: 'lat' | 'lng'): string {
   return `${Math.abs(value).toFixed(2)}° ${direction}`;
 }
 
-interface Props { onBack?: () => void; }
+interface Props { onBack?: () => void; onOpenSettings: () => void; soundEnabled: boolean; }
 
-export function ActivePlay({ onBack }: Props = {}): JSX.Element {
+export function ActivePlay({ onBack, onOpenSettings, soundEnabled }: Props): JSX.Element {
   const [data, setData] = useState<InitResponse | null>(null);
   const [round, setRound] = useState<PublicRound | null>(null);
   const [pin, setPin] = useState<LatLng | null>(null);
@@ -156,6 +158,7 @@ export function ActivePlay({ onBack }: Props = {}): JSX.Element {
       revealRef.current = response.result;
       setRevealed(response.result);
       setResults(response.session.rounds);
+      playGameTone(response.result.roundScore >= 2500 ? 'correct' : 'wrong', soundEnabled);
       setPin(guess);
       setDeadlineAt(null);
       setRemaining(0);
@@ -178,7 +181,7 @@ export function ActivePlay({ onBack }: Props = {}): JSX.Element {
       setError(reason instanceof Error ? reason.message : 'Your pin could not be locked. Try again.');
       setBusy(false);
     }
-  }, [round, revealed, startNextRound, finishSummary]);
+  }, [round, revealed, startNextRound, finishSummary, soundEnabled]);
 
   submitRef.current = submitGuess;
 
@@ -263,7 +266,7 @@ export function ActivePlay({ onBack }: Props = {}): JSX.Element {
   const summaryData = data && data.status === 'COMPLETED' ? data : null;
 
   if (loading) {
-    return <main className="game-loading" aria-live="polite">{onBack && <button className="result-back" type="button" onClick={onBack}>← All games</button>}<p>Loading Daily Expedition…</p><div className="loading-line" /></main>;
+    return <main className="game-shell game-loading" aria-live="polite"><GameHeader mode="Daily Expedition" onOpenSettings={onOpenSettings} />{onBack && <button className="result-back" type="button" onClick={onBack}>← All games</button>}<p>Loading Daily Expedition…</p><div className="loading-line" /></main>;
   }
 
   if (summaryData) {
@@ -281,17 +284,19 @@ export function ActivePlay({ onBack }: Props = {}): JSX.Element {
         onBack={onBack}
         units={units}
         onUnitsChange={setUnits}
+        onOpenSettings={onOpenSettings}
       />
     );
   }
 
   if (error && !round && !revealed) {
-    return <main className="game-error"><h1>Daily Expedition paused</h1><p role="alert">{error}</p><div className="game-error-actions"><button className="primary-button" type="button" onClick={() => window.location.reload()}>Reload geoMaster</button>{onBack && <button className="secondary-button" type="button" onClick={onBack}>All games</button>}</div></main>;
+    return <main className="game-shell game-error"><GameHeader mode="Daily Expedition" onOpenSettings={onOpenSettings} /><h1>Daily Expedition paused</h1><p role="alert">{error}</p><div className="game-error-actions"><button className="primary-button" type="button" onClick={() => window.location.reload()}>Reload geoMaster</button>{onBack && <button className="secondary-button" type="button" onClick={onBack}>All games</button>}</div></main>;
   }
 
   return (
     <main className="game-shell">
-      <header className="game-hud">
+      <GameHeader mode="Daily Expedition" onOpenSettings={onOpenSettings} />
+      <div className="game-hud">
         {onBack && <button className="game-mode-back" type="button" onClick={onBack}>All games</button>}
         <div className="round-progress" role="progressbar" aria-label="Expedition progress" aria-valuemin={0} aria-valuemax={5} aria-valuenow={results.length} aria-valuetext={`${results.length} of 5 coordinates completed`}>
           {[1, 2, 3, 4, 5].map((number) => {
@@ -308,7 +313,7 @@ export function ActivePlay({ onBack }: Props = {}): JSX.Element {
           <button type="button" className={units === 'km' ? 'active' : ''} onClick={() => setUnits('km')} aria-pressed={units === 'km'}>km</button>
           <button type="button" className={units === 'mi' ? 'active' : ''} onClick={() => setUnits('mi')} aria-pressed={units === 'mi'}>mi</button>
         </div>
-      </header>
+      </div>
 
       {error && <p className="game-inline-error" role="alert">{error}</p>}
 
@@ -324,7 +329,7 @@ export function ActivePlay({ onBack }: Props = {}): JSX.Element {
       ) : (
         <>
           <section className="expedition-clue-card" aria-labelledby="expedition-clue-title">
-            <div className="expedition-clue-heading"><span>Daily Expedition</span><span>Round {round?.round ?? '—'} of 5</span></div>
+            <div className="expedition-clue-heading"><span>Round {round?.round ?? '—'} of 5</span></div>
             <h1 id="expedition-clue-title">Find this location</h1>
             <p>Use the geographic clues to narrow down the location, then place your pin on the map.</p>
             {round ? <dl className="expedition-clue-facts">

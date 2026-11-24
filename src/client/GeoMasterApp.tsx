@@ -1,15 +1,42 @@
-import { useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { ActivePlay } from './components/ActivePlay';
 import { LocalExpedition } from './components/LocalExpedition';
 import { QuizMode } from './components/QuizMode';
+import { GameSettings, type TextSizeChoice, type ThemeChoice } from './components/GameSettings';
 import { QUIZ_MODES, type QuizModeId } from '../shared/countries';
 
 const QUIZ_MODE_DESCRIPTIONS: Record<QuizModeId, string> = {
-  country: 'Find the flag for each country.',
-  flag: 'Identify the country shown by each flag.',
-  capital: 'Match each capital to its flag.',
-  guesser: 'Use country facts to identify the country.',
+  country: 'Find the flag that belongs to each country.',
+  flag: 'Name the country behind each flag.',
+  capital: 'Choose the flag for each capital city.',
+  guesser: 'Read the clues. Work out the country.',
 };
+
+const QUIZ_MODE_SYMBOLS: Record<QuizModeId, string> = {
+  country: '🌍',
+  flag: '🚩',
+  capital: '🏛️',
+  guesser: '🔎',
+};
+
+interface AppSettings {
+  soundEnabled: boolean;
+  theme: ThemeChoice;
+  textSize: TextSizeChoice;
+}
+
+function readAppSettings(): AppSettings {
+  try {
+    return {
+      soundEnabled: localStorage.getItem('geomaster_sound') !== 'false',
+      theme: localStorage.getItem('geomaster_theme') === 'light' ? 'light' : 'dark',
+      textSize: (['small', 'medium', 'large'].includes(localStorage.getItem('geomaster_text_size') || '')
+        ? localStorage.getItem('geomaster_text_size') : 'medium') as TextSizeChoice,
+    };
+  } catch {
+    return { soundEnabled: true, theme: 'dark', textSize: 'medium' };
+  }
+}
 
 function readBestTime(mode: QuizModeId): number | null {
   try {
@@ -29,21 +56,21 @@ function formatTime(seconds: number | null): string {
 function ModeHub({
   onDaily,
   onQuiz,
-  dailyAvailable,
+  onOpenSettings,
 }: {
   onDaily: () => void;
   onQuiz: (mode: QuizModeId) => void;
-  dailyAvailable: boolean;
+  onOpenSettings: () => void;
 }): JSX.Element {
   const [recordsVersion, setRecordsVersion] = useState(0);
   const [confirmClear, setConfirmClear] = useState(false);
-  const records = QUIZ_MODES.map((mode) => ({ ...mode, displayTitle: mode.title, best: readBestTime(mode.id) }));
+  const records = QUIZ_MODES.map((mode) => ({ ...mode, displayTitle: mode.title.replace(/\s+Mode$/i, ''), best: readBestTime(mode.id) }));
 
   const clearRecords = () => {
     try {
       for (const mode of QUIZ_MODES) localStorage.removeItem(`geomaster_${mode.id}`);
     } catch {
-      // Browser storage is optional; game play does not depend on it.
+      // Browser storage is optional; gameplay does not depend on it.
     }
     setRecordsVersion((value) => value + 1);
     setConfirmClear(false);
@@ -52,39 +79,32 @@ function ModeHub({
   return (
     <main className="hub-shell">
       <header className="hub-header">
-        <div className="hub-brand">geoMaster</div>
+        <div className="hub-brand"><span className="hub-brand-mark" aria-hidden="true">✦</span><span className="hub-brand-word">geo<span>Master</span></span></div>
       </header>
 
       <section className="hub-intro">
         <h1>Choose a Game</h1>
+        <p>Five ways to explore the world.</p>
       </section>
 
       <section className="hub-mode-list" aria-label="geoMaster game modes">
-        <button
-          className="hub-mode-row"
-          type="button"
-          onClick={onDaily}
-          disabled={!dailyAvailable}
-          aria-describedby={!dailyAvailable ? 'daily-expedition-platform-note' : undefined}
-        >
-          <strong>Daily Expedition</strong>
-          <span id={!dailyAvailable ? 'daily-expedition-platform-note' : undefined}>
-            {dailyAvailable
-              ? 'Identify five locations using geographic clues and map placement.'
-              : 'Identify five locations using geographic clues and map placement.'}
-          </span>
+        <button className="hub-mode-row mode-expedition" type="button" onClick={onDaily}>
+          <span className="hub-mode-symbol" aria-hidden="true">🧭</span>
+          <span className="hub-mode-copy"><strong>Daily Expedition</strong><span>Pin five places before the clock runs out.</span></span>
+          <span className="hub-mode-arrow" aria-hidden="true">→</span>
         </button>
         {QUIZ_MODES.map((mode) => (
-          <button key={mode.id} className="hub-mode-row" type="button" onClick={() => onQuiz(mode.id)}>
-            <strong>{mode.title.replace(/\s+Mode$/i, '')}</strong>
-            <span>{QUIZ_MODE_DESCRIPTIONS[mode.id]}</span>
+          <button key={mode.id} className={`hub-mode-row mode-${mode.id}`} type="button" onClick={() => onQuiz(mode.id)}>
+            <span className="hub-mode-symbol" aria-hidden="true">{QUIZ_MODE_SYMBOLS[mode.id]}</span>
+            <span className="hub-mode-copy"><strong>{mode.title.replace(/\s+Mode$/i, '')}</strong><span>{QUIZ_MODE_DESCRIPTIONS[mode.id]}</span></span>
+            <span className="hub-mode-arrow" aria-hidden="true">→</span>
           </button>
         ))}
       </section>
 
       <section className="hub-records" aria-label="Quiz mode personal bests">
         <div className="hub-record-heading">
-          <h2>Quiz personal bests</h2>
+          <h2>Personal Bests</h2>
           <button type="button" onClick={() => setConfirmClear(true)}>Clear records</button>
         </div>
         <div className="hub-record-grid" key={recordsVersion}>
@@ -100,6 +120,12 @@ function ModeHub({
           </div>
         )}
       </section>
+
+      <button className="hub-settings-button" type="button" onClick={onOpenSettings}>
+        <span className="hub-settings-symbol" aria-hidden="true">⚙</span>
+        <span>Settings</span>
+        <span className="hub-settings-arrow" aria-hidden="true">→</span>
+      </button>
     </main>
   );
 }
@@ -108,21 +134,60 @@ export function GeoMasterApp(): JSX.Element {
   const isVercelWebBuild = import.meta.env.MODE === 'web-preview';
   const [view, setView] = useState<'hub' | 'daily' | 'quiz'>('hub');
   const [quizMode, setQuizMode] = useState<QuizModeId | null>(null);
+  const [settingsOpen, setSettingsOpen] = useState(false);
+  const [settings, setSettings] = useState<AppSettings>(readAppSettings);
+  const openSettings = useCallback(() => setSettingsOpen(true), []);
+  const closeSettings = useCallback(() => setSettingsOpen(false), []);
+
+  useEffect(() => {
+    try {
+      localStorage.setItem('geomaster_sound', String(settings.soundEnabled));
+      localStorage.setItem('geomaster_theme', settings.theme);
+      localStorage.setItem('geomaster_text_size', settings.textSize);
+    } catch {
+      // Settings remain available in memory when storage is unavailable.
+    }
+    document.documentElement.dataset.theme = settings.theme;
+    document.documentElement.dataset.textSize = settings.textSize;
+    document.querySelector<HTMLMetaElement>('meta[name="theme-color"]')?.setAttribute('content', settings.theme === 'dark' ? '#171d3b' : '#fff8e9');
+  }, [settings]);
+
+  const updateSetting = <K extends keyof AppSettings>(key: K, value: AppSettings[K]) => {
+    setSettings((previous) => ({ ...previous, [key]: value }));
+  };
+
   const returnToModes = () => {
     setQuizMode(null);
     setView('hub');
   };
 
-  if (view === 'daily') return isVercelWebBuild
-    ? <LocalExpedition onBack={returnToModes} />
-    : <ActivePlay onBack={returnToModes} />;
-  if (view === 'quiz' && quizMode) return <QuizMode mode={quizMode} onBack={returnToModes} />;
-
   return (
-    <ModeHub
-      dailyAvailable={true}
-      onDaily={() => setView('daily')}
-      onQuiz={(mode) => { setQuizMode(mode); setView('quiz'); }}
-    />
+    <div className={`geomaster-app theme-${settings.theme}`}>
+      {view === 'daily' ? (
+        isVercelWebBuild
+          ? <LocalExpedition onBack={returnToModes} onOpenSettings={openSettings} soundEnabled={settings.soundEnabled} />
+          : <ActivePlay onBack={returnToModes} onOpenSettings={openSettings} soundEnabled={settings.soundEnabled} />
+      ) : view === 'quiz' && quizMode ? (
+        <QuizMode mode={quizMode} onBack={returnToModes} soundEnabled={settings.soundEnabled} onOpenSettings={openSettings} />
+      ) : (
+        <ModeHub
+          onDaily={() => setView('daily')}
+          onQuiz={(mode) => { setQuizMode(mode); setView('quiz'); }}
+          onOpenSettings={openSettings}
+        />
+      )}
+
+      {settingsOpen && (
+        <GameSettings
+          soundEnabled={settings.soundEnabled}
+          theme={settings.theme}
+          textSize={settings.textSize}
+          onSoundChange={(value) => updateSetting('soundEnabled', value)}
+          onThemeChange={(value) => updateSetting('theme', value)}
+          onTextSizeChange={(value) => updateSetting('textSize', value)}
+          onClose={closeSettings}
+        />
+      )}
+    </div>
   );
 }

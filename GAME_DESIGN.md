@@ -58,8 +58,12 @@ A quiz session selects seven countries and provides four answer options per ques
 
 ## Shared experience
 
+- Use a geoMaster-specific playful atlas visual language: high-contrast typography, saturated but coordinated mode colours, rounded pressable controls with visible depth, and brief interaction feedback. The direction takes broad inspiration from Duolingo’s principles of playful motivation and consistent cross-section craft without copying its mascot, artwork, or exact interface.
+- The five mode choices stay together in one vertical selection panel. The Settings button sits immediately below Personal Bests on the landing screen. During a game, Settings remains accessible from the shared game header.
+- All five modes use one shared game header/wordmark, one responsive frame width, common progress and timer treatments, shared prompt surfaces, and the same primary/secondary action-button system. Mode-specific controls reflect each game mechanic but not a different visual system.
 - Use the geoMaster name and visual identity in every mode.
 - Use a single expanded mode hub as the navigation point.
+- Sound, light/dark appearance, and text size are controlled from the shared Settings panel and persist across modes. Text sizes are Small (0.75×), Medium (1×), and Large (1.25×).
 - Provide a consistent return path to **All games** from active play and result screens.
 - Preserve the original quiz modes, the original country values, and per-mode personal-best records.
 - Keep daily-session state and scoring server-authoritative; do not expose unplayed target coordinates to the client.
@@ -76,7 +80,8 @@ The daily reminder control is currently disabled because notification access is 
 
 - `src/client/index.html` and `src/client/main.tsx`: inline Reddit post card.
 - `src/client/game.html` and `src/client/game.tsx`: one expanded geoMaster application.
-- `src/client/GeoMasterApp.tsx`: mode hub and in-app mode routing.
+- `src/client/GeoMasterApp.tsx`: mode hub, app-level preferences, and in-app mode routing.
+- `src/client/components/GameSettings.tsx`: shared Settings panel and settings trigger.
 - `src/client/components/ActivePlay.tsx`: Daily Expedition.
 - `src/client/components/QuizMode.tsx`: Country, Flag, Capital, and Guesser modes.
 - `src/server/index.ts`: Devvit API routes, menu action, and daily scheduler.

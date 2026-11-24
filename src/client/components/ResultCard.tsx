@@ -2,6 +2,7 @@ import { useState } from 'react';
 import type { InitResponse, RoundResult } from '../../shared/types';
 import { formatDistance } from '../../shared/geo';
 import { VectorMap } from './VectorMap';
+import { GameHeader } from './GameHeader';
 
 interface Props {
   data: InitResponse;
@@ -16,6 +17,7 @@ interface Props {
   onBack?: () => void;
   units: 'km' | 'mi';
   onUnitsChange: (value: 'km' | 'mi') => void;
+  onOpenSettings: () => void;
 }
 
 async function postAction(path: string): Promise<Record<string, unknown>> {
@@ -44,6 +46,7 @@ export function ResultCard({
   onBack,
   units,
   onUnitsChange,
+  onOpenSettings,
 }: Props): JSX.Element {
   const [selectedRound, setSelectedRound] = useState(1);
   const [shareBusy, setShareBusy] = useState(false);
@@ -84,6 +87,7 @@ export function ResultCard({
 
   return (
     <main className="result-shell">
+      <GameHeader mode="Daily Expedition" onOpenSettings={onOpenSettings} />
       {onBack && <button className="result-back" type="button" onClick={onBack}>← All games</button>}
       <header className="result-heading">
         <div>
