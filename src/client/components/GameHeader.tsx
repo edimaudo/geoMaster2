@@ -1,11 +1,18 @@
-import { SettingsButton } from './GameSettings';
+interface GameHeaderProps { mode: string; }
 
-export function GameHeader({ mode, onOpenSettings }: { mode: string; onOpenSettings: () => void }): JSX.Element {
+export function GameHeader({ mode }: GameHeaderProps): JSX.Element {
   return (
     <header className="gm-game-header">
-      <span className="gm-header-spacer" aria-hidden="true" />
       <h1 className="gm-game-title">{mode}</h1>
-      <SettingsButton onClick={onOpenSettings} />
     </header>
+  );
+}
+
+export function GameNavigation({ onBack, onOpenSettings }: { onBack: () => void; onOpenSettings: () => void }): JSX.Element {
+  return (
+    <nav className="game-bottom-nav" aria-label="Game navigation">
+      <button className="game-bottom-button game-bottom-all" type="button" onClick={onBack}>All Games</button>
+      <button className="game-bottom-button game-bottom-settings" type="button" onClick={onOpenSettings}>Settings</button>
+    </nav>
   );
 }

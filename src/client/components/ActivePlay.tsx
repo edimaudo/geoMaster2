@@ -10,7 +10,7 @@ import type {
 import { ResultCard } from './ResultCard';
 import { RevealArcOverlay } from './RevealArcOverlay';
 import { VectorMap } from './VectorMap';
-import { GameHeader } from './GameHeader';
+import { GameHeader, GameNavigation } from './GameHeader';
 import { playGameTone } from './audio';
 
 interface LatLng { lat: number; lng: number }
@@ -265,7 +265,7 @@ export function ActivePlay({ onBack, onOpenSettings, soundEnabled }: Props): JSX
   const summaryData = data && data.status === 'COMPLETED' ? data : null;
 
   if (loading) {
-    return <main className="game-shell game-loading" aria-live="polite"><GameHeader mode="Daily Expedition" onOpenSettings={onOpenSettings} />{onBack && <button className="result-back" type="button" onClick={onBack}>All games</button>}<p>Loading Daily Expedition…</p><div className="loading-line" /></main>;
+    return <main className="game-shell game-loading" aria-live="polite"><GameHeader mode="Daily Expedition" /><p>Loading Daily Expedition…</p><div className="loading-line" /><GameNavigation onBack={onBack || (() => undefined)} onOpenSettings={onOpenSettings} /></main>;
   }
 
   if (summaryData) {
@@ -287,14 +287,13 @@ export function ActivePlay({ onBack, onOpenSettings, soundEnabled }: Props): JSX
   }
 
   if (error && !round && !revealed) {
-    return <main className="game-shell game-error"><GameHeader mode="Daily Expedition" onOpenSettings={onOpenSettings} /><h1>Daily Expedition paused</h1><p role="alert">{error}</p><div className="game-error-actions"><button className="primary-button" type="button" onClick={() => window.location.reload()}>Reload geoMaster</button>{onBack && <button className="secondary-button" type="button" onClick={onBack}>All games</button>}</div></main>;
+    return <main className="game-shell game-error"><GameHeader mode="Daily Expedition" /><h1>Daily Expedition paused</h1><p role="alert">{error}</p><div className="game-error-actions"><button className="primary-button" type="button" onClick={() => window.location.reload()}>Reload geoMaster</button></div><GameNavigation onBack={onBack || (() => undefined)} onOpenSettings={onOpenSettings} /></main>;
   }
 
   return (
     <main className="game-shell">
-      <GameHeader mode="Daily Expedition" onOpenSettings={onOpenSettings} />
+      <GameHeader mode="Daily Expedition" />
       <div className="game-hud">
-        {onBack && <button className="game-mode-back" type="button" onClick={onBack}>All games</button>}
         <div className="round-progress" role="progressbar" aria-label="Expedition progress" aria-valuemin={0} aria-valuemax={5} aria-valuenow={results.length} aria-valuetext={`${results.length} of 5 coordinates completed`}>
           {[1, 2, 3, 4, 5].map((number) => {
             const done = results.some((item) => item.round === number);
@@ -342,6 +341,7 @@ export function ActivePlay({ onBack, onOpenSettings, soundEnabled }: Props): JSX
           </div>
         </>
       )}
+      <GameNavigation onBack={onBack || (() => undefined)} onOpenSettings={onOpenSettings} />
     </main>
   );
 }

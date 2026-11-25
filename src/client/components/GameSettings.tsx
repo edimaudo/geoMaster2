@@ -13,14 +13,6 @@ interface SettingsProps {
   onClose: () => void;
 }
 
-export function SettingsButton({ onClick }: { onClick: () => void }): JSX.Element {
-  return (
-    <button className="gm-settings-trigger" type="button" onClick={onClick} aria-label="Open settings" title="Settings">
-      Settings
-    </button>
-  );
-}
-
 export function GameSettings({
   soundEnabled, theme, textSize, onSoundChange, onThemeChange, onTextSizeChange, onClose,
 }: SettingsProps): JSX.Element {

@@ -74,11 +74,7 @@ function ModeHub({
       <header className="hub-header">
         <div className="hub-brand" aria-label="geoMaster">geoMaster</div>
       </header>
-
-      <section className="hub-intro">
-        <h1>Choose a Game</h1>
-        <p>Five ways to explore the world.</p>
-      </section>
+      <h1 className="sr-only">geoMaster games</h1>
 
       <section className="hub-mode-list" aria-label="geoMaster game modes">
         <button className="hub-mode-row mode-expedition" type="button" onClick={onDaily}>
@@ -110,9 +106,7 @@ function ModeHub({
         )}
       </section>
 
-      <button className="hub-settings-button" type="button" onClick={onOpenSettings}>
-        <span>Settings</span>
-      </button>
+      <button className="hub-settings-button" type="button" onClick={onOpenSettings}>Settings</button>
     </main>
   );
 }

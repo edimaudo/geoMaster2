@@ -2,7 +2,7 @@ import { useState } from 'react';
 import type { InitResponse, RoundResult } from '../../shared/types';
 import { formatDistance } from '../../shared/geo';
 import { VectorMap } from './VectorMap';
-import { GameHeader } from './GameHeader';
+import { GameHeader, GameNavigation } from './GameHeader';
 
 interface Props {
   data: InitResponse;
@@ -83,7 +83,7 @@ export function ResultCard({
 
   return (
     <main className="result-shell">
-      <GameHeader mode="Daily Expedition" onOpenSettings={onOpenSettings} />
+      <GameHeader mode="Daily Expedition" />
       <header className="result-heading">
         <div>
           
@@ -161,7 +161,7 @@ export function ResultCard({
       )}
 
       {actionError && <p className="action-error" role="alert">{actionError}</p>}
-      {onBack && <button className="primary-button expedition-back-button" type="button" onClick={onBack}>Back to games</button>}
+      {onBack && <GameNavigation onBack={onBack} onOpenSettings={onOpenSettings} />}
     </main>
   );
 }

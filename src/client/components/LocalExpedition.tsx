@@ -3,7 +3,7 @@ import catalog from '../../../assets/geo_catalog.json';
 import type { GeoLocation, RoundResult } from '../../shared/types';
 import { RevealArcOverlay } from './RevealArcOverlay';
 import { VectorMap } from './VectorMap';
-import { GameHeader } from './GameHeader';
+import { GameHeader, GameNavigation } from './GameHeader';
 import { playGameTone } from './audio';
 
 const LOCATIONS = (catalog as { locations: GeoLocation[] }).locations;
@@ -72,17 +72,16 @@ export function LocalExpedition({ onBack, onOpenSettings, soundEnabled }: { onBa
   const total = results.reduce((sum, item) => sum + item.roundScore, 0);
 
   if (finished) return <main className="game-shell expedition-shell expedition-summary">
-    <GameHeader mode="Daily Expedition" onOpenSettings={onOpenSettings} />
+    <GameHeader mode="Daily Expedition" />
     <h1>Expedition complete</h1><p className="expedition-total">{total.toLocaleString()} <span>points</span></p>
     <p>You completed all five locations in the Daily Expedition.</p>
     <div className="expedition-results">{results.map((item) => <div key={item.round}><span>Location {item.round}</span><strong>{item.locationName}, {item.country}</strong><span>{item.distanceKm === null ? 'No pin placed' : `${Math.round(item.distanceKm).toLocaleString()} km away`}</span><b>{item.roundScore.toLocaleString()} pts</b></div>)}</div>
-    <button className="primary-button expedition-back-button" onClick={onBack} type="button">Back to games</button>
+    <GameNavigation onBack={onBack || (() => undefined)} onOpenSettings={onOpenSettings} />
   </main>;
 
   return <main className="game-shell expedition-shell">
-    <GameHeader mode="Daily Expedition" onOpenSettings={onOpenSettings} />
+    <GameHeader mode="Daily Expedition" />
     <div className="game-hud">
-      <button className="game-mode-back" type="button" onClick={onBack}>All games</button>
       <div className="round-progress" role="progressbar" aria-label="Expedition progress" aria-valuemin={0} aria-valuemax={5} aria-valuenow={index + (result ? 1 : 0)}>{locations.map((_, i) => <span key={i} className={i < index || (i === index && result) ? 'done' : i === index ? 'current' : ''}/>)}</div>
       <div className="timer-block" aria-label={`${(remaining/1000).toFixed(1)} seconds remaining`}><div className="timer-track"><span style={{width:`${remaining/ROUND_MS*100}%`}}/></div><strong>{(remaining/1000).toFixed(1)}<small>s</small></strong></div>
     </div>
@@ -105,5 +104,6 @@ export function LocalExpedition({ onBack, onOpenSettings, soundEnabled }: { onBa
       <section className="map-stage"><div className="map-stage-heading"><strong>Place the pin</strong><span className="map-coordinate-readout">{pin ? `${pin.lat.toFixed(2)}°, ${pin.lng.toFixed(2)}°` : 'Select a location on the map'}</span></div><VectorMap pin={pin} interactive onPinChange={setPin}/></section>
       <div className="game-action-bar"><button className="primary-button lock-button" type="button" disabled={!pin} onClick={() => submit(pin)}>Lock in location</button></div>
     </>}
+    <GameNavigation onBack={onBack || (() => undefined)} onOpenSettings={onOpenSettings} />
   </main>;
 }

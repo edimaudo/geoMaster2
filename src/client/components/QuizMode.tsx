@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
-import { GameHeader } from './GameHeader';
+import { GameHeader, GameNavigation } from './GameHeader';
 import { playGameTone } from './audio';
 import {
   buildQuizQuestions,
@@ -162,12 +162,11 @@ export function QuizMode({ mode, onBack, soundEnabled, onOpenSettings }: Props):
 
   return (
     <main className="quiz-shell">
-      <GameHeader mode={currentMode?.title.replace(/\s+Mode$/i, '') || 'Quiz'} onOpenSettings={onOpenSettings} />
+      <GameHeader mode={currentMode?.title.replace(/\s+Mode$/i, '') || 'Quiz'} />
 
       {status === 'playing' && currentQuestion && currentMode && (
         <section className="quiz-play">
           <div className="quiz-play-top">
-            <button type="button" className="quiz-back" onClick={backToMenu}>All games</button>
             <div className="quiz-progress"><strong>Question {questionIndex + 1} / {questions.length}</strong><span>{currentMode.title}</span></div>
             <div className="quiz-clock" role="timer" aria-live="off"><strong>{formatTime(displayedTime)}</strong><span>Elapsed + penalties</span></div>
           </div>
@@ -219,11 +218,11 @@ export function QuizMode({ mode, onBack, soundEnabled, onOpenSettings }: Props):
           </div>
           <div className="quiz-result-actions">
             <button type="button" className="quiz-primary" onClick={() => startMode(mode)}>Play again</button>
-            <button type="button" className="quiz-secondary" onClick={backToMenu}>All games</button>
           </div>
         </section>
       )}
 
+      <GameNavigation onBack={backToMenu} onOpenSettings={onOpenSettings} />
     </main>
   );
 }
