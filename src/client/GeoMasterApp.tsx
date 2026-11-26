@@ -46,6 +46,23 @@ function formatTime(seconds: number | null): string {
   return `${Math.floor(safe / 60)}:${String(safe % 60).padStart(2, '0')}`;
 }
 
+const DAILY_EXPEDITION_BEST_KEY = 'geomaster_daily_expedition_best_score';
+
+function readBestExpeditionScore(): number | null {
+  try {
+    const stored = localStorage.getItem(DAILY_EXPEDITION_BEST_KEY);
+    if (stored === null) return null;
+    const score = Number(stored);
+    return Number.isFinite(score) && score >= 0 ? score : null;
+  } catch {
+    return null;
+  }
+}
+
+function formatExpeditionScore(score: number | null): string {
+  return score === null ? 'Not set' : `${score.toLocaleString()} pts`;
+}
+
 function ModeHub({
   onDaily,
   onQuiz,
@@ -57,11 +74,19 @@ function ModeHub({
 }): JSX.Element {
   const [recordsVersion, setRecordsVersion] = useState(0);
   const [confirmClear, setConfirmClear] = useState(false);
-  const records = QUIZ_MODES.map((mode) => ({ ...mode, displayTitle: mode.title.replace(/\s+Mode$/i, ''), best: readBestTime(mode.id) }));
+  const records = [
+    { id: 'daily-expedition', displayTitle: 'Daily Expedition', displayBest: formatExpeditionScore(readBestExpeditionScore()) },
+    ...QUIZ_MODES.map((mode) => ({
+      id: mode.id,
+      displayTitle: mode.title.replace(/\s+Mode$/i, ''),
+      displayBest: formatTime(readBestTime(mode.id)),
+    })),
+  ];
 
   const clearRecords = () => {
     try {
       for (const mode of QUIZ_MODES) localStorage.removeItem(`geomaster_${mode.id}`);
+      localStorage.removeItem(DAILY_EXPEDITION_BEST_KEY);
     } catch {
       // Browser storage is optional; gameplay does not depend on it.
     }
@@ -78,7 +103,7 @@ function ModeHub({
 
       <section className="hub-mode-list" aria-label="geoMaster game modes">
         <button className="hub-mode-row mode-expedition" type="button" onClick={onDaily}>
-          <span className="hub-mode-copy"><strong>Daily Expedition</strong><span>Pin five places before the clock runs out.</span></span>
+          <span className="hub-mode-copy"><strong>Daily Expedition</strong><span>Find the right spot.</span></span>
         </button>
         {QUIZ_MODES.map((mode) => (
           <button key={mode.id} className={`hub-mode-row mode-${mode.id}`} type="button" onClick={() => onQuiz(mode.id)}>
@@ -87,19 +112,19 @@ function ModeHub({
         ))}
       </section>
 
-      <section className="hub-records" aria-label="Quiz mode personal bests">
+      <section className="hub-records" aria-label="All game personal bests">
         <div className="hub-record-heading">
           <h2>Personal Bests</h2>
           <button type="button" onClick={() => setConfirmClear(true)}>Clear records</button>
         </div>
         <div className="hub-record-grid" key={recordsVersion}>
           {records.map((mode) => (
-            <div key={mode.id}><span>{mode.displayTitle}</span><strong>{formatTime(mode.best)}</strong></div>
+            <div key={mode.id}><span>{mode.displayTitle}</span><strong>{mode.displayBest}</strong></div>
           ))}
         </div>
         {confirmClear && (
           <div className="hub-clear-confirm" role="group" aria-labelledby="clear-records-title">
-            <span id="clear-records-title">Clear all four quiz personal bests?</span>
+            <span id="clear-records-title">Clear all five game personal bests?</span>
             <button type="button" onClick={clearRecords}>Clear</button>
             <button type="button" onClick={() => setConfirmClear(false)}>Cancel</button>
           </div>

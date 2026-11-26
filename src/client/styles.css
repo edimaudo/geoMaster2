@@ -2272,3 +2272,102 @@ button:focus-visible {
 }
 .geomaster-app button:focus-visible,
 .geomaster-app a:focus-visible { outline-color: currentColor; }
+
+
+/* Shared numbered progress pills for Daily Expedition and all quiz modes. */
+.game-step-pills {
+  min-width: 0;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 5px;
+  list-style: none;
+}
+.game-step-pills li {
+  width: 29px;
+  height: 28px;
+  flex: 0 0 29px;
+  display: grid;
+  place-items: center;
+  border-radius: 9px;
+  background: var(--surface-muted);
+  color: var(--muted);
+  font: 750 .75rem/1 Inter, sans-serif;
+  font-variant-numeric: tabular-nums;
+  box-shadow: inset 0 -2px 0 color-mix(in srgb, var(--ink) 10%, transparent);
+}
+.game-step-pills li.is-complete {
+  background: #2e79a8;
+  color: #fff;
+  box-shadow: inset 0 -2px 0 rgba(0,0,0,.18);
+}
+.game-step-pills li.is-current {
+  background: #6658d8;
+  color: #fff;
+  box-shadow: inset 0 -2px 0 rgba(0,0,0,.22), 0 0 0 2px color-mix(in srgb, #6658d8 25%, transparent);
+}
+.game-hud {
+  grid-template-columns: minmax(0, 1fr) minmax(124px, 184px);
+  gap: clamp(10px, 2vw, 18px);
+  align-items: center;
+}
+.game-hud > .game-step-pills { width: 100%; }
+.timer-block {
+  width: 100%;
+  min-width: 124px;
+  grid-template-columns: minmax(0, 1fr) 39px;
+  gap: 9px;
+}
+.timer-block strong { min-width: 39px; white-space: nowrap; }
+.timer-track { min-width: 0; }
+.quiz-play-top { grid-template-columns: minmax(0, 1fr) auto; align-items: center; gap: 12px; }
+.quiz-progress { min-width: 0; align-items: flex-start; gap: 7px; }
+.quiz-progress .game-step-pills { max-width: 100%; }
+.quiz-progress strong { line-height: 1.2; }
+.next-button {
+  display: flex;
+  align-self: center;
+  width: min(100%, 520px);
+  min-height: 56px;
+  flex: 0 0 auto;
+  padding: 0 22px;
+  white-space: normal;
+  text-align: center;
+}
+.expedition-best-result {
+  width: min(100%, 380px);
+  margin: 0 auto;
+  padding: 13px 16px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 14px;
+  border-radius: 13px;
+  background: var(--surface);
+  color: var(--ink);
+}
+.expedition-best-result span { color: var(--muted); font-weight: 650; }
+.expedition-best-result strong { font-size: 1.05rem; font-weight: 850; font-variant-numeric: tabular-nums; }
+.hub-record-grid { grid-template-columns: repeat(5, minmax(0, 1fr)); }
+.hub-record-grid div { min-width: 0; }
+.hub-record-grid span { overflow-wrap: anywhere; line-height: 1.2; }
+.hub-record-grid strong { font-size: clamp(.78rem, 1.3vw, .98rem); white-space: nowrap; }
+@media (max-width: 680px) {
+  .game-hud { grid-template-columns: minmax(0, 1fr) minmax(118px, 144px); gap: 10px; }
+  .timer-block { min-width: 118px; grid-template-columns: minmax(0, 1fr) 37px; gap: 7px; }
+  .game-step-pills { gap: 4px; }
+  .game-step-pills li { width: 26px; height: 27px; flex-basis: 26px; }
+  .hub-record-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  .quiz-play-top { grid-template-columns: minmax(0, 1fr) auto; gap: 8px; }
+}
+@media (max-width: 380px) {
+  .game-shell .game-hud { grid-template-columns: minmax(0, 1fr) minmax(108px, 122px); gap: 8px; }
+  .game-shell .timer-block { min-width: 108px; grid-template-columns: minmax(0, 1fr) 34px; gap: 6px; }
+  .game-step-pills { gap: 3px; }
+  .game-step-pills li { width: 24px; height: 26px; flex-basis: 24px; font-size: .7rem; }
+  .hub-record-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .quiz-play-top { grid-template-columns: minmax(0, 1fr) auto; gap: 6px; }
+  .quiz-progress .game-step-pills { gap: 3px; }
+}

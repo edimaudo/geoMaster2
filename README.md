@@ -57,3 +57,5 @@ See [`VERCEL_DEPLOYMENT.md`](VERCEL_DEPLOYMENT.md) for deployment instructions.
 ## Content readiness
 
 The original country dataset and the Daily Expedition location catalogue are separate. The current Daily Expedition catalogue has 25 development locations and requires content review, coordinate validation, and expansion before a public launch. Gameplay uses structured text clues (continent, country, and feature category) rather than synthetic SVG illustrations. Daily-post idempotency, play counts, crowd aggregates, and leaderboards are currently app-wide rather than subreddit-scoped; multi-subreddit support is not complete. The daily reminder control is disabled and does not currently register notifications.
+
+Daily Expedition records a device-local personal best based on the highest completed score (out of 25,000). Quiz modes retain their existing fastest-completion personal bests. Clear records removes all five personal-best entries.

@@ -11,6 +11,7 @@ import { ResultCard } from './ResultCard';
 import { RevealArcOverlay } from './RevealArcOverlay';
 import { VectorMap } from './VectorMap';
 import { GameHeader, GameNavigation } from './GameHeader';
+import { GameProgress } from './GameProgress';
 import { playGameTone } from './audio';
 
 interface LatLng { lat: number; lng: number }
@@ -264,6 +265,19 @@ export function ActivePlay({ onBack, onOpenSettings, soundEnabled }: Props): JSX
   const completedResults = finalResponse?.session.rounds || results;
   const summaryData = data && data.status === 'COMPLETED' ? data : null;
 
+  useEffect(() => {
+    if (!summaryData) return;
+    try {
+      const stored = localStorage.getItem('geomaster_daily_expedition_best_score');
+      const previousBest = stored === null ? null : Number(stored);
+      if (previousBest === null || !Number.isFinite(previousBest) || summaryData.totalScore > previousBest) {
+        localStorage.setItem('geomaster_daily_expedition_best_score', String(summaryData.totalScore));
+      }
+    } catch {
+      // Personal-best storage is optional and does not affect the shared session.
+    }
+  }, [summaryData?.status, summaryData?.totalScore]);
+
   if (loading) {
     return <main className="game-shell game-loading" aria-live="polite"><GameHeader mode="Daily Expedition" /><p>Loading Daily Expedition…</p><div className="loading-line" /><GameNavigation onBack={onBack || (() => undefined)} onOpenSettings={onOpenSettings} /></main>;
   }
@@ -294,13 +308,12 @@ export function ActivePlay({ onBack, onOpenSettings, soundEnabled }: Props): JSX
     <main className="game-shell">
       <GameHeader mode="Daily Expedition" />
       <div className="game-hud">
-        <div className="round-progress" role="progressbar" aria-label="Expedition progress" aria-valuemin={0} aria-valuemax={5} aria-valuenow={results.length} aria-valuetext={`${results.length} of 5 coordinates completed`}>
-          {[1, 2, 3, 4, 5].map((number) => {
-            const done = results.some((item) => item.round === number);
-            const active = round?.round === number && !revealed;
-            return <span key={number} className={`${done ? 'done' : ''} ${active ? 'current' : ''}`} aria-hidden="true" />;
-          })}
-        </div>
+        <GameProgress
+          label="Location"
+          totalSteps={5}
+          completedSteps={results.length}
+          currentStep={revealed ? null : (round?.round ?? null)}
+        />
         <div className={`timer-block ${timerTone}`} role="timer" aria-live="off" aria-label={`${timeValue} seconds remaining`}>
           <div className="timer-track"><span style={{ width: `${ratio}%` }} /></div>
           <strong>{timeValue}<small>s</small></strong>
@@ -311,7 +324,6 @@ export function ActivePlay({ onBack, onOpenSettings, soundEnabled }: Props): JSX
 
       {revealed ? (
         <section className="reveal-stage" aria-label={`Round ${revealed.round} revealed`}>
-          <div className="reveal-map-head"><span>R{revealed.round} / 05</span></div>
           <VectorMap reveal={revealed} />
           <RevealArcOverlay result={revealed} />
           <button className="primary-button next-button" type="button" onClick={() => { clearNextTimeout(); if (finalResponse?.session.status === 'COMPLETED') finishSummary(finalResponse); else if (revealed.round === 5) { void api<InitResponse>('/api/init').then((latest) => { setData(latest); setResults(latest.results); setRevealed(null); setRound(null); }).catch((reason: unknown) => setError(reason instanceof Error ? reason.message : 'The atlas summary could not load.')); } else void startNextRound(); }}>
@@ -321,8 +333,7 @@ export function ActivePlay({ onBack, onOpenSettings, soundEnabled }: Props): JSX
       ) : (
         <>
           <section className="expedition-clue-card" aria-labelledby="expedition-clue-title">
-            <div className="expedition-clue-heading"><span>Round {round?.round ?? '—'} of 5</span></div>
-            <h1 id="expedition-clue-title">Find this location</h1>
+            <h1 id="expedition-clue-title">Find the right spot</h1>
             <p>Use the geographic clues to narrow down the location, then place your pin on the map.</p>
             {round ? <dl className="expedition-clue-facts">
               <div><dt>Continent</dt><dd>{round.continent}</dd></div>

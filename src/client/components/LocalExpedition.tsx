@@ -4,10 +4,23 @@ import type { GeoLocation, RoundResult } from '../../shared/types';
 import { RevealArcOverlay } from './RevealArcOverlay';
 import { VectorMap } from './VectorMap';
 import { GameHeader, GameNavigation } from './GameHeader';
+import { GameProgress } from './GameProgress';
 import { playGameTone } from './audio';
 
 const LOCATIONS = (catalog as { locations: GeoLocation[] }).locations;
 const ROUND_MS = 12_000;
+const DAILY_EXPEDITION_BEST_KEY = 'geomaster_daily_expedition_best_score';
+
+function readBestScore(): number | null {
+  try {
+    const stored = localStorage.getItem(DAILY_EXPEDITION_BEST_KEY);
+    if (stored === null) return null;
+    const score = Number(stored);
+    return Number.isFinite(score) && score >= 0 ? score : null;
+  } catch {
+    return null;
+  }
+}
 const dateKey = new Date().toISOString().slice(0, 10);
 function dailyLocations(): GeoLocation[] {
   let seed = Number(dateKey.replaceAll('-', ''));
@@ -34,6 +47,8 @@ export function LocalExpedition({ onBack, onOpenSettings, soundEnabled }: { onBa
   const [results, setResults] = useState<RoundResult[]>([]);
   const [remaining, setRemaining] = useState(ROUND_MS);
   const [finished, setFinished] = useState(false);
+  const [bestScore, setBestScore] = useState<number | null>(readBestScore);
+  const [isNewBest, setIsNewBest] = useState(false);
   const startAt = useRef(Date.now());
   const soundEnabledRef = useRef(soundEnabled);
   soundEnabledRef.current = soundEnabled;
@@ -66,7 +81,20 @@ export function LocalExpedition({ onBack, onOpenSettings, soundEnabled }: { onBa
   }, [index, result, finished]);
 
   const advance = () => {
-    if (index === 4) { setFinished(true); return; }
+    if (index === 4) {
+      const finalScore = results.reduce((sum, item) => sum + item.roundScore, 0);
+      const previousBest = readBestScore();
+      const hasNewBest = previousBest === null || finalScore > previousBest;
+      if (hasNewBest) {
+        try { localStorage.setItem(DAILY_EXPEDITION_BEST_KEY, String(finalScore)); } catch { /* Storage is optional. */ }
+        setBestScore(finalScore);
+      } else {
+        setBestScore(previousBest);
+      }
+      setIsNewBest(hasNewBest);
+      setFinished(true);
+      return;
+    }
     setIndex((n) => n + 1); setPin(null); setResult(null);
   };
   const total = results.reduce((sum, item) => sum + item.roundScore, 0);
@@ -74,7 +102,8 @@ export function LocalExpedition({ onBack, onOpenSettings, soundEnabled }: { onBa
   if (finished) return <main className="game-shell expedition-shell expedition-summary">
     <GameHeader mode="Daily Expedition" />
     <h1>Expedition complete</h1><p className="expedition-total">{total.toLocaleString()} <span>points</span></p>
-    <p>You completed all five locations in the Daily Expedition.</p>
+    <p>{isNewBest ? 'New personal best!' : 'Your Daily Expedition result.'}</p>
+    <div className="expedition-best-result"><span>Personal best</span><strong>{bestScore === null ? '—' : `${bestScore.toLocaleString()} pts`}</strong></div>
     <div className="expedition-results">{results.map((item) => <div key={item.round}><span>Location {item.round}</span><strong>{item.locationName}, {item.country}</strong><span>{item.distanceKm === null ? 'No pin placed' : `${Math.round(item.distanceKm).toLocaleString()} km away`}</span><b>{item.roundScore.toLocaleString()} pts</b></div>)}</div>
     <GameNavigation onBack={onBack || (() => undefined)} onOpenSettings={onOpenSettings} />
   </main>;
@@ -82,18 +111,16 @@ export function LocalExpedition({ onBack, onOpenSettings, soundEnabled }: { onBa
   return <main className="game-shell expedition-shell">
     <GameHeader mode="Daily Expedition" />
     <div className="game-hud">
-      <div className="round-progress" role="progressbar" aria-label="Expedition progress" aria-valuemin={0} aria-valuemax={5} aria-valuenow={index + (result ? 1 : 0)}>{locations.map((_, i) => <span key={i} className={i < index || (i === index && result) ? 'done' : i === index ? 'current' : ''}/>)}</div>
-      <div className="timer-block" aria-label={`${(remaining/1000).toFixed(1)} seconds remaining`}><div className="timer-track"><span style={{width:`${remaining/ROUND_MS*100}%`}}/></div><strong>{(remaining/1000).toFixed(1)}<small>s</small></strong></div>
+      <GameProgress label="Location" totalSteps={5} completedSteps={index + (result ? 1 : 0)} currentStep={result ? null : index + 1} />
+      <div className="timer-block" role="timer" aria-live="off" aria-label={`${(remaining/1000).toFixed(1)} seconds remaining`}><div className="timer-track"><span style={{width:`${remaining/ROUND_MS*100}%`}}/></div><strong>{(remaining/1000).toFixed(1)}<small>s</small></strong></div>
     </div>
     {result ? <section className="reveal-stage">
-      <div className="expedition-round-title">Location {index+1} of 5</div>
       <VectorMap reveal={result}/><RevealArcOverlay result={result}/>
       <div className="expedition-answer"><strong>{current.name}, {current.country}</strong><span>{result.distanceKm === null ? 'Time expired · no pin placed' : `${Math.round(result.distanceKm).toLocaleString()} km from your pin`}</span><b>{result.roundScore.toLocaleString()} points</b></div>
       <button className="primary-button next-button" type="button" onClick={advance}>{index === 4 ? 'See results' : 'Next location'}</button>
     </section> : <>
       <section className="expedition-clue-card" aria-labelledby="expedition-clue-title">
-        <div className="expedition-clue-heading"><span>Round {index + 1} of 5</span></div>
-        <h1 id="expedition-clue-title">Find this location</h1>
+        <h1 id="expedition-clue-title">Find the right spot</h1>
         <p>Use the geographic clues to narrow down the location, then place your pin on the map.</p>
         <dl className="expedition-clue-facts">
           <div><dt>Continent</dt><dd>{current.continent}</dd></div>

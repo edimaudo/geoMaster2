@@ -59,13 +59,13 @@ A quiz session selects seven countries and provides four answer options per ques
 ## Shared experience
 
 - Use a geoMaster-specific playful atlas visual language: Inter typography, high-contrast type, coordinated violet, blue, coral, gold, and indigo accents, compact text-led controls with visible depth, and brief interaction feedback. Take broad inspiration from Duolingo’s principles of playful motivation and consistent craft without copying its mascot, artwork, or exact interface. Do not add a standalone logo, decorative mode icons, or trailing button arrows.
-- The five mode choices stay together in one vertical selection panel. The Settings button sits immediately below Personal Bests on the landing screen. During a game, Settings remains accessible from the shared game header.
-- All five modes use one shared, centered game-type header, one responsive frame width, common progress and timer treatments, shared prompt surfaces, and the same primary/secondary action-button system. Daily Expedition and the quiz modes must not use different game-shell dimensions or visual treatments. The mode hub uses the geoMaster name as text only, without a logo or mark.
+- The five mode choices stay together in one vertical selection panel. The Settings button sits immediately below Personal Bests on the landing screen. During a game, All Games and Settings remain available as shared buttons below the game content so they do not reduce gameplay space.
+- All five modes use one shared, centered game-type header, one responsive frame width, the same numbered progress pills, timer treatment, shared prompt surfaces, and the same primary/secondary action-button system. Daily Expedition and the quiz modes must not use different game-shell dimensions or visual treatments. The mode hub uses the geoMaster name as text only, without a logo or mark.
 - Use the geoMaster name and visual identity in every mode.
 - Use a single expanded mode hub as the navigation point.
-- Sound, light/dark appearance, and text size are controlled from the shared Settings panel and persist across modes. On the mode hub, the compact Settings control sits below Personal Bests; in game, a compact text-only Settings control remains in the header. Text sizes are Small (0.75×), Medium (1×), and Large (1.25×).
+- Sound, light/dark appearance, and text size are controlled from the shared Settings panel and persist across modes. On the mode hub, Settings sits below Personal Bests; during play, Settings and All Games sit below gameplay content and do not occupy game space. Text sizes are Small (0.75×), Medium (1×), and Large (1.25×).
 - Provide a consistent return path to **All games** during active play and a single **Back to games** action on completed Daily Expedition results. Display all Daily Expedition distances in kilometres; do not add a km/mi preference.
-- Preserve the original quiz modes, the original country values, and per-mode personal-best records.
+- Preserve the original quiz modes, the original country values, and per-mode quiz personal-best times. Daily Expedition also records the player’s highest completed score out of 25,000 as a device-local personal best.
 - Keep daily-session state and scoring server-authoritative; do not expose unplayed target coordinates to the client.
 
 ## Content boundaries and launch readiness

@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 import { GameHeader, GameNavigation } from './GameHeader';
+import { GameProgress } from './GameProgress';
 import { playGameTone } from './audio';
 import {
   buildQuizQuestions,
@@ -167,10 +168,9 @@ export function QuizMode({ mode, onBack, soundEnabled, onOpenSettings }: Props):
       {status === 'playing' && currentQuestion && currentMode && (
         <section className="quiz-play">
           <div className="quiz-play-top">
-            <div className="quiz-progress"><strong>Question {questionIndex + 1} / {questions.length}</strong><span>{currentMode.title}</span></div>
+            <div className="quiz-progress"><strong>Question {questionIndex + 1} / {questions.length}</strong><GameProgress label="Question" totalSteps={questions.length} completedSteps={questionIndex} currentStep={questionIndex + 1} /></div>
             <div className="quiz-clock" role="timer" aria-live="off"><strong>{formatTime(displayedTime)}</strong><span>Elapsed + penalties</span></div>
           </div>
-          <div className="quiz-progress-track" role="progressbar" aria-label="Quiz progress" aria-valuemin={0} aria-valuemax={questions.length} aria-valuenow={questionIndex + 1} aria-valuetext={`Question ${questionIndex + 1} of ${questions.length}`}><span aria-hidden="true" style={{ width: `${((questionIndex + 1) / questions.length) * 100}%` }} /></div>
           <div className="quiz-prompt-card">{renderPrompt()}</div>
           <div className={`quiz-answer-grid ${mode === 'country' || mode === 'capital' ? 'quiz-flag-grid' : ''}`} role="group" aria-label="Answer choices">
             {currentQuestion.options.map((option) => {

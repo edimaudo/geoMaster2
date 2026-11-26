@@ -35,8 +35,8 @@ export function InlineCard(): JSX.Element {
   const statusLine = data?.status === 'COMPLETED'
     ? `Completed · ${data.totalScore.toLocaleString()} pts${data.percentileTop ? ` · Top ${data.percentileTop}%` : ''}`
     : data?.status === 'IN_PROGRESS'
-      ? `Resume Round ${Math.min(data.currentRound, 5)} of 5`
-      : '5 daily coordinates · same puzzle for everyone';
+      ? 'Resume today’s challenge'
+      : 'Find the right spot.';
 
   const handlePlay = (event: React.MouseEvent<HTMLButtonElement>) => {
     try {
@@ -64,7 +64,7 @@ export function InlineCard(): JSX.Element {
         <div className="preview-crosshair" aria-hidden="true"><span /><span /></div>
         <div className="preview-caption">
           
-          <h1>Five places.<br />One world.</h1>
+          <h1>Find the right spot.</h1>
           <p>{loading ? 'Preparing today’s coordinates…' : statusLine}</p>
         </div>
         <div className="preview-coordinates" aria-hidden="true"><span>00° 00′ N</span><span>000° 00′ E</span></div>
