@@ -2371,3 +2371,364 @@ button:focus-visible {
   .quiz-play-top { grid-template-columns: minmax(0, 1fr) auto; gap: 6px; }
   .quiz-progress .game-step-pills { gap: 3px; }
 }
+
+
+/* 2026-11-26: align every landing row and apply one consistent button system. */
+.geomaster-app {
+  --muted: #c6c3d6;
+  --button-primary: #4f42b7;
+  --button-primary-hover: #40349f;
+  --button-depth: #2c246f;
+  --button-focus: #b7afff;
+  --button-outline: #f4f0ff;
+  --success-text: #8dcef4;
+  --error-text: #ffaaa1;
+}
+.geomaster-app.theme-light {
+  --muted: #53516a;
+  --button-primary: #4f42b7;
+  --button-primary-hover: #40349f;
+  --button-depth: #2c246f;
+  --button-focus: #4939b5;
+  --button-outline: #29273c;
+  --success-text: #175d85;
+  --error-text: #a4332b;
+}
+
+/* All five mode choices use the same alignment and text block geometry. */
+.hub-mode-list { align-items: stretch; }
+.hub-mode-row {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  width: 100%;
+  min-height: 76px;
+  padding: 14px 20px;
+  text-align: left;
+  border-radius: 14px;
+}
+.hub-mode-row .hub-mode-copy {
+  display: flex;
+  flex: 1 1 auto;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  min-width: 0;
+  text-align: center;
+  gap: 5px;
+}
+.hub-mode-row .hub-mode-copy strong,
+.hub-mode-row .hub-mode-copy > span {
+  display: block;
+  width: 100%;
+  margin: 0;
+  color: inherit;
+  opacity: 1;
+  text-align: center;
+}
+.hub-record-grid div { align-items: center; text-align: center; }
+.hub-record-grid span,
+.hub-record-grid strong { display: block; width: 100%; text-align: center; }
+
+/* The numbered steps are the sole visible question-progress indicator. */
+.quiz-progress { min-width: 0; align-items: flex-start; justify-self: start; gap: 0; }
+.quiz-progress .game-step-pills { width: auto; max-width: 100%; }
+.quiz-progress .game-step-pills li { flex: 0 0 29px; }
+.quiz-progress .game-step-pills li:first-child { margin-left: 0; }
+.quiz-progress strong { display: none; }
+
+/* Shared button geometry: colour communicates role; shape, depth and motion stay consistent. */
+.geomaster-app button {
+  font-family: Inter, sans-serif;
+  -webkit-tap-highlight-color: transparent;
+}
+.geomaster-app :is(
+  .hub-mode-row,
+  .hub-settings-button,
+  .game-bottom-button,
+  .quiz-answer,
+  .quiz-primary,
+  .primary-button,
+  .quiz-secondary,
+  .secondary-button,
+  .gm-settings-close,
+  .gm-settings-done,
+  .gm-segmented button,
+  .hub-clear-confirm button,
+  .hub-record-heading button,
+  .map-controls button
+) {
+  border-radius: 14px;
+  font-family: Inter, sans-serif;
+  font-weight: 800;
+  transition: transform .12s ease, box-shadow .12s ease, background-color .12s ease, border-color .12s ease;
+}
+.geomaster-app :is(.hub-mode-row, .hub-settings-button, .game-bottom-button, .quiz-answer, .primary-button, .quiz-primary, .secondary-button, .quiz-secondary, .gm-settings-close, .gm-settings-done, .hub-clear-confirm button) {
+  box-shadow: 0 4px 0 var(--button-depth);
+}
+.geomaster-app :is(.hub-mode-row, .hub-settings-button, .game-bottom-button, .quiz-answer, .primary-button, .quiz-primary, .secondary-button, .quiz-secondary, .gm-settings-close, .gm-settings-done, .hub-clear-confirm button):active:not(:disabled) {
+  transform: translateY(2px);
+  box-shadow: 0 1px 0 var(--button-depth);
+}
+.geomaster-app :is(.hub-mode-row, .quiz-answer, .game-bottom-button, .hub-settings-button, .primary-button, .quiz-primary, .secondary-button, .quiz-secondary, .gm-settings-close, .gm-settings-done, .gm-segmented button, .hub-clear-confirm button, .hub-record-heading button, .map-controls button):focus-visible {
+  outline: 3px solid var(--button-focus);
+  outline-offset: 3px;
+  box-shadow: 0 0 0 6px var(--paper);
+}
+
+/* Mode-specific fills remain distinct, with stronger foreground contrast in both themes. */
+.hub-mode-row.mode-expedition { background: #5242b8; color: #fff; border: 2px solid var(--button-outline); }
+.hub-mode-row.mode-country { background: #1f5e9c; color: #fff; border: 2px solid var(--button-outline); }
+.hub-mode-row.mode-flag { background: #a83d2f; color: #fff; border: 2px solid var(--button-outline); }
+.hub-mode-row.mode-capital { background: #5a439f; color: #fff; border: 2px solid var(--button-outline); }
+.hub-mode-row.mode-guesser { background: #e7b64c; color: #26233a; border: 2px solid var(--button-outline); }
+.hub-mode-row:hover:not(:disabled) { filter: none; transform: translateY(-1px); box-shadow: 0 5px 0 var(--button-depth); }
+.hub-mode-row:active:not(:disabled) { filter: none; transform: translateY(2px); box-shadow: 0 1px 0 var(--button-depth); }
+
+/* Primary actions use one accessible indigo treatment in both themes. */
+.geomaster-app :is(.primary-button, .quiz-primary, .gm-settings-done) {
+  min-height: 50px;
+  border: 2px solid var(--button-outline);
+  border-radius: 14px;
+  background: var(--button-primary);
+  color: #fff;
+  box-shadow: 0 4px 0 var(--button-depth);
+}
+.geomaster-app :is(.primary-button, .quiz-primary, .gm-settings-done):hover:not(:disabled) {
+  background: var(--button-primary-hover);
+  transform: translateY(-1px);
+  box-shadow: 0 5px 0 var(--button-depth);
+}
+.geomaster-app :is(.primary-button, .quiz-primary, .gm-settings-done):active:not(:disabled) {
+  background: var(--button-primary-hover);
+  transform: translateY(2px);
+  box-shadow: 0 1px 0 var(--button-depth);
+}
+
+/* Secondary and utility actions retain the same shape and tactile depth. */
+.geomaster-app :is(.secondary-button, .quiz-secondary, .game-bottom-button, .hub-settings-button, .gm-settings-close, .hub-clear-confirm button) {
+  min-height: 48px;
+  border: 2px solid var(--button-outline);
+  border-radius: 14px;
+  background: var(--surface);
+  color: var(--ink);
+  box-shadow: 0 4px 0 var(--button-depth);
+}
+.geomaster-app :is(.secondary-button, .quiz-secondary, .game-bottom-button, .hub-settings-button, .gm-settings-close, .hub-clear-confirm button):hover:not(:disabled) {
+  background: var(--surface-muted);
+}
+.geomaster-app .quiz-answer {
+  min-height: 62px;
+  border: 2px solid var(--button-outline);
+  border-radius: 14px;
+  background: var(--surface);
+  color: var(--ink);
+  box-shadow: 0 4px 0 var(--button-depth);
+}
+.geomaster-app .quiz-answer:not(:disabled):hover { background: var(--surface-muted); transform: translateY(-1px); }
+.geomaster-app .quiz-answer.is-correct {
+  border: 2px solid #2a6f9e;
+  background: #eaf4fa;
+  color: #17354b;
+  box-shadow: 0 4px 0 #194f73;
+}
+.geomaster-app.theme-dark .quiz-answer.is-correct {
+  border-color: #8dcef4;
+  background: #1e3b55;
+  color: #f5faff;
+  box-shadow: 0 4px 0 #102a42;
+}
+.geomaster-app .quiz-answer.is-wrong {
+  border: 2px solid #a4332b;
+  background: #fff0ed;
+  color: #4c201c;
+  box-shadow: 0 4px 0 #7d2923;
+}
+.geomaster-app.theme-dark .quiz-answer.is-wrong {
+  border-color: #ffaaa1;
+  background: #4b292e;
+  color: #fff7f5;
+  box-shadow: 0 4px 0 #351d22;
+}
+.geomaster-app .quiz-answer.is-muted { opacity: .72; }
+.geomaster-app .quiz-feedback.feedback-correct { color: var(--success-text); }
+.geomaster-app .quiz-feedback.feedback-wrong { color: var(--error-text); }
+
+/* Make clear-records and map controls follow the same control language. */
+.geomaster-app .hub-record-heading button {
+  min-height: 44px;
+  padding: 0 12px;
+  border: 2px solid var(--button-outline);
+  border-radius: 14px;
+  background: var(--surface);
+  color: var(--ink);
+  text-decoration: none;
+  box-shadow: 0 3px 0 var(--button-depth);
+}
+.geomaster-app .map-controls button {
+  width: 44px;
+  height: 44px;
+  min-width: 44px;
+  min-height: 44px;
+  border: 2px solid var(--button-outline);
+  border-radius: 14px;
+  background: var(--surface);
+  color: var(--ink);
+  box-shadow: 0 3px 0 var(--button-depth);
+}
+.geomaster-app .gm-segmented {
+  border: 2px solid var(--line);
+  border-radius: 14px;
+  background: var(--surface-muted);
+}
+.geomaster-app .gm-segmented button {
+  min-height: 44px;
+  border-radius: 14px;
+  border: 2px solid transparent;
+  color: var(--ink);
+}
+.geomaster-app .gm-segmented button.active {
+  background: var(--button-primary);
+  color: #fff;
+  box-shadow: 0 3px 0 var(--button-depth);
+}
+.hub-settings-button { justify-content: center; text-align: center; }
+
+@media (max-width: 680px) {
+  .hub-mode-row { min-height: 70px; padding: 12px 15px; }
+  .hub-record-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .quiz-progress .game-step-pills li { flex-basis: 25px; width: 25px; height: 27px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .geomaster-app button { transition: none !important; }
+}
+
+
+/* Ensure button borders meet non-text contrast against the page in both themes. */
+.geomaster-app :is(.secondary-button, .quiz-secondary, .game-bottom-button, .hub-settings-button, .gm-settings-close, .hub-clear-confirm button, .hub-record-heading button, .quiz-answer, .map-controls button) {
+  border-color: var(--button-outline);
+}
+.geomaster-app .hub-record-heading button { text-decoration: none; }
+.geomaster-app .hub-mode-row { text-align: center; }
+.geomaster-app .hub-mode-copy,
+.geomaster-app .hub-mode-copy strong,
+.geomaster-app .hub-mode-copy > span { text-align: center; }
+
+/* Theme-aware status and timer colours: keep small status text above AA contrast. */
+.geomaster-app { --timer-fill: #a79cff; --timer-warning: #ffd078; --timer-critical: #ffaaa1; --clue-accent: #b7afff; --score-accent: #a79bff; }
+.geomaster-app.theme-light {
+  --timer-fill: #4f42b7;
+  --timer-warning: #8a5b0a;
+  --timer-critical: #a4332b;
+  --clue-accent: #4939b5;
+  --score-accent: #4f42b7;
+}
+.geomaster-app .timer-track span { background: var(--timer-fill); }
+.geomaster-app .timer-warning .timer-track span { background: var(--timer-warning); }
+.geomaster-app .timer-critical .timer-track span { background: var(--timer-critical); }
+.geomaster-app .timer-warning strong { color: var(--timer-warning); }
+.geomaster-app .timer-critical strong { color: var(--timer-critical); }
+.geomaster-app .expedition-clue-heading,
+.geomaster-app .reveal-map-head .eyebrow { color: var(--clue-accent); }
+.geomaster-app .reveal-score,
+.geomaster-app .coordinates-line,
+.geomaster-app .expedition-answer b { color: var(--score-accent); }
+.geomaster-app .quiz-feedback.feedback-correct { color: var(--success-text); }
+.geomaster-app .quiz-feedback.feedback-wrong { color: var(--error-text); }
+.geomaster-app .game-step-pills li.is-complete { background: #1f5e9c; color: #fff; }
+.geomaster-app .game-step-pills li.is-current { background: #5242b8; color: #fff; }
+.geomaster-app .game-step-pills li.is-current,
+.geomaster-app .game-step-pills li.is-complete { border: 1px solid var(--button-outline); }
+
+/* The compact Reddit feed entry uses the same primary-button design token. */
+.inline-shell .primary-button {
+  min-height: 50px;
+  border: 2px solid #F4F0FF;
+  border-radius: 14px;
+  background: #4F42B7;
+  color: #FFFFFF;
+  box-shadow: 0 4px 0 #2C246F;
+  font-family: Inter, sans-serif;
+  font-weight: 800;
+  transition: transform .12s ease, box-shadow .12s ease, background-color .12s ease;
+}
+.inline-shell .primary-button:hover:not(:disabled) {
+  background: #40349F;
+  transform: translateY(-1px);
+  box-shadow: 0 5px 0 #2C246F;
+}
+.inline-shell .primary-button:active:not(:disabled) {
+  transform: translateY(2px);
+  box-shadow: 0 1px 0 #2C246F;
+}
+.inline-shell .primary-button:focus-visible {
+  outline: 3px solid #B7AFFF;
+  outline-offset: 3px;
+  box-shadow: 0 0 0 6px #101B2B;
+}
+
+
+/* Gameplay progress uses unnumbered pill markers in every mode. */
+.geomaster-app .game-step-pills {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  gap: clamp(4px, 0.8vw, 7px);
+  width: 100%;
+  min-width: 0;
+  padding: 4px 0;
+  margin: 0;
+  list-style: none;
+}
+.geomaster-app .game-step-pills li {
+  display: block;
+  flex: 1 1 0;
+  width: auto;
+  max-width: 42px;
+  min-width: 8px;
+  height: 9px;
+  padding: 0;
+  border: 0;
+  border-radius: 999px;
+  background: var(--surface-muted);
+  color: transparent;
+  box-shadow: none;
+  font-size: 0;
+  line-height: 0;
+  transition: flex-grow .18s ease, background-color .18s ease;
+}
+.geomaster-app .game-step-pills li.is-complete {
+  background: #286fa4;
+  border: 0;
+  box-shadow: none;
+}
+.geomaster-app .game-step-pills li.is-current {
+  flex-grow: 1.55;
+  background: #6658d8;
+  border: 0;
+  border-radius: 999px;
+  box-shadow: none;
+}
+.geomaster-app.theme-light .game-step-pills li:not(.is-complete):not(.is-current) {
+  background: #cbd3df;
+}
+.geomaster-app.theme-dark .game-step-pills li:not(.is-complete):not(.is-current),
+.geomaster-app:not(.theme-light) .game-step-pills li:not(.is-complete):not(.is-current) {
+  background: #46516a;
+}
+.geomaster-app .quiz-progress {
+  width: 100%;
+  min-width: 0;
+  align-items: stretch;
+}
+.geomaster-app .quiz-progress .game-step-pills {
+  width: 100%;
+  max-width: 100%;
+}
+@media (max-width: 380px) {
+  .geomaster-app .game-step-pills { gap: 3px; }
+  .geomaster-app .game-step-pills li { height: 8px; max-width: 36px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .geomaster-app .game-step-pills li { transition: none; }
+}

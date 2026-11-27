@@ -143,7 +143,7 @@ export function QuizMode({ mode, onBack, soundEnabled, onOpenSettings }: Props):
   const renderPrompt = () => {
     if (!currentQuestion) return null;
     if (mode === 'country') {
-      return <div className="quiz-text-prompt"><span className="quiz-prompt-label">Find the flag for</span><strong>{currentQuestion.correct.name}</strong></div>;
+      return <div className="quiz-text-prompt"><span className="quiz-prompt-label">Choose the flag that matches</span><strong>{currentQuestion.correct.name}</strong></div>;
     }
     if (mode === 'flag') {
       return <div className="quiz-flag-prompt"><Flag country={currentQuestion.correct} /><span>Which country does this flag belong to?</span></div>;
@@ -168,7 +168,7 @@ export function QuizMode({ mode, onBack, soundEnabled, onOpenSettings }: Props):
       {status === 'playing' && currentQuestion && currentMode && (
         <section className="quiz-play">
           <div className="quiz-play-top">
-            <div className="quiz-progress"><strong>Question {questionIndex + 1} / {questions.length}</strong><GameProgress label="Question" totalSteps={questions.length} completedSteps={questionIndex} currentStep={questionIndex + 1} /></div>
+            <div className="quiz-progress"><GameProgress label="Question" totalSteps={questions.length} completedSteps={questionIndex} currentStep={questionIndex + 1} /></div>
             <div className="quiz-clock" role="timer" aria-live="off"><strong>{formatTime(displayedTime)}</strong><span>Elapsed + penalties</span></div>
           </div>
           <div className="quiz-prompt-card">{renderPrompt()}</div>
@@ -211,7 +211,6 @@ export function QuizMode({ mode, onBack, soundEnabled, onOpenSettings }: Props):
           <h1>{newRecord ? 'A new record.' : 'Quiz complete.'}</h1>
           <div className="quiz-final-time"><strong>{formatTime(finalTime)}</strong><span>final time</span></div>
           <div className="quiz-result-details">
-            <div><span>Game</span><strong>{currentMode.title}</strong></div>
             <div><span>Questions</span><strong>{questions.length}</strong></div>
             <div><span>Penalties</span><strong>{formatTime(penalties)}</strong></div>
             <div><span>Personal best</span><strong>{bestTime === null ? '—' : formatTime(bestTime)}</strong></div>

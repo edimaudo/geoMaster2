@@ -60,7 +60,7 @@ function readBestExpeditionScore(): number | null {
 }
 
 function formatExpeditionScore(score: number | null): string {
-  return score === null ? 'Not set' : `${score.toLocaleString()} pts`;
+  return score === null ? '—' : `${score.toLocaleString()} pts`;
 }
 
 function ModeHub({

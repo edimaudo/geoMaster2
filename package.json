@@ -16,7 +16,8 @@
     "typecheck": "tsc --noEmit",
     "test": "npm run typecheck && vitest run",
     "test:watch": "vitest",
-    "build:web-preview": "vite build --config vite.vercel.config.ts --mode web-preview"
+    "build:web-preview": "vite build --config vite.vercel.config.ts --mode web-preview",
+    "audit:contrast": "node scripts/contrast-audit.mjs"
   },
   "dependencies": {
     "@devvit/analytics": "^0.15.0",
