@@ -53,16 +53,22 @@ const checks = [
   ['Dark timer warning', '#FFD078', '#272741', 4.5],
   ['Light timer critical', '#A4332B', '#FFFDF8', 4.5],
   ['Dark timer critical', '#FFAAA1', '#272741', 4.5],
-  // Step indicators.
-  ['Completed step number', '#FFFFFF', '#1F5E9C', 4.5],
-  ['Current step number', '#FFFFFF', '#5242B8', 4.5],
-  ['Upcoming step number, light', '#53516A', '#EEE9DF', 4.5],
-  ['Upcoming step number, dark', '#C6C3D6', '#343451', 4.5],
+  // Unnumbered progress pills are graphical indicators (3:1 non-text contrast).
+  ['Completed progress pill, light', '#1F5E9C', '#EEE9DF', 3],
+  ['Current progress pill, light', '#5242B8', '#EEE9DF', 3],
+  ['Upcoming progress pill, light', '#737B8C', '#FFFDF8', 3],
+  ['Completed progress pill, dark', '#65C9ED', '#343451', 3],
+  ['Current progress pill, dark', '#B8A7FF', '#343451', 3],
+  ['Upcoming progress pill, dark', '#7B8494', '#272741', 3],
   // Focus and control boundaries.
   ['Focus indicator, light', '#4939B5', '#F5F1E9', 3],
   ['Focus indicator, dark', '#B7AFFF', '#19192D', 3],
   ['Light control outline', '#29273C', '#F5F1E9', 3],
   ['Dark control outline', '#F4F0FF', '#19192D', 3],
+  // Flag image boundaries must remain visible on white and light surfaces.
+  ['Light flag outline on white flag', '#596579', '#FFFFFF', 3],
+  ['Light flag outline on light answer card', '#596579', '#F5F1E9', 3],
+  ['Dark flag outline on white flag', '#6B7280', '#FFFFFF', 3],
 ];
 
 let failed = 0;

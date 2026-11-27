@@ -305,7 +305,7 @@ export function ActivePlay({ onBack, onOpenSettings, soundEnabled }: Props): JSX
   }
 
   return (
-    <main className="game-shell">
+    <main className="game-shell expedition-shell">
       <GameHeader mode="Daily Expedition" />
       <div className="game-hud">
         <GameProgress

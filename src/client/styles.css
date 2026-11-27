@@ -2732,3 +2732,87 @@ button:focus-visible {
 @media (prefers-reduced-motion: reduce) {
   .geomaster-app .game-step-pills li { transition: none; }
 }
+
+
+/* Final spacing and flag visibility refinement across every game mode. */
+.geomaster-app .game-shell,
+.geomaster-app .quiz-shell {
+  gap: 12px;
+}
+.geomaster-app .game-bottom-nav {
+  margin: 0 auto;
+  padding-top: 0;
+  gap: 10px;
+}
+.geomaster-app .quiz-play {
+  gap: 12px;
+}
+
+/* Give white flags a defined edge against light quiz surfaces. */
+.geomaster-app .quiz-flag {
+  display: block;
+  box-sizing: border-box;
+  background: #ffffff;
+  border: 2px solid #657184;
+  border-radius: 5px;
+  object-fit: contain;
+  box-shadow: 0 2px 5px rgba(17, 24, 39, .14);
+}
+.geomaster-app.theme-light .quiz-flag {
+  border-color: #596579;
+  box-shadow: 0 0 0 1px #ffffff, 0 2px 5px rgba(17, 24, 39, .18);
+}
+.geomaster-app.theme-dark .quiz-flag {
+  border-color: #6b7280;
+  box-shadow: 0 0 0 1px #20283a, 0 2px 6px rgba(0, 0, 0, .25);
+}
+
+/* Daily Expedition: reduce the map footprint so clue actions and navigation breathe. */
+.geomaster-app .expedition-shell .map-stage {
+  min-height: 0;
+  flex: 0 0 auto;
+  gap: 6px;
+}
+.geomaster-app .expedition-shell .map-stage .map-wrap {
+  width: 100%;
+  height: clamp(205px, 32vh, 300px);
+  min-height: 190px;
+  max-height: 300px;
+  flex: 0 0 auto;
+}
+.geomaster-app .expedition-shell .reveal-stage .map-wrap {
+  height: clamp(205px, 30vh, 290px);
+  min-height: 190px;
+  max-height: 290px;
+  flex: 0 0 auto;
+}
+.geomaster-app .expedition-shell .next-button,
+.geomaster-app .expedition-shell .game-action-bar .primary-button {
+  width: min(100%, 520px);
+  min-height: 54px;
+}
+@media (max-width: 680px) {
+  .geomaster-app .game-shell,
+  .geomaster-app .quiz-shell { gap: 10px; }
+  .geomaster-app .game-bottom-nav { gap: 8px; }
+  .geomaster-app .expedition-shell .map-stage .map-wrap {
+    height: clamp(175px, 27vh, 235px);
+    min-height: 175px;
+    max-height: 235px;
+  }
+  .geomaster-app .expedition-shell .reveal-stage .map-wrap {
+    height: clamp(180px, 27vh, 240px);
+    min-height: 180px;
+    max-height: 240px;
+  }
+}
+
+
+/* Progress pills meet non-text contrast requirements in both themes. */
+.geomaster-app.theme-light .game-step-pills li.is-complete { background: #1f5e9c; }
+.geomaster-app.theme-light .game-step-pills li.is-current { background: #5242b8; }
+.geomaster-app.theme-dark .game-step-pills li.is-complete { background: #65c9ed; }
+.geomaster-app.theme-dark .game-step-pills li.is-current { background: #b8a7ff; }
+
+.geomaster-app.theme-light .game-step-pills li:not(.is-complete):not(.is-current) { background: #737b8c; }
+.geomaster-app.theme-dark .game-step-pills li:not(.is-complete):not(.is-current) { background: #7b8494; }

@@ -6,10 +6,10 @@ import { GameSettings, type TextSizeChoice, type ThemeChoice } from './component
 import { QUIZ_MODES, type QuizModeId } from '../shared/countries';
 
 const QUIZ_MODE_DESCRIPTIONS: Record<QuizModeId, string> = {
-  country: 'Find the flag that belongs to each country.',
-  flag: 'Name the country behind each flag.',
-  capital: 'Choose the flag for each capital city.',
-  guesser: 'Read the clues. Work out the country.',
+  country: 'Find the flag that belongs to each country',
+  flag: 'Name the country behind each flag',
+  capital: 'Choose the flag for each capital city',
+  guesser: 'Read the clues. Work out the country',
 };
 
 interface AppSettings {
@@ -103,7 +103,7 @@ function ModeHub({
 
       <section className="hub-mode-list" aria-label="geoMaster game modes">
         <button className="hub-mode-row mode-expedition" type="button" onClick={onDaily}>
-          <span className="hub-mode-copy"><strong>Daily Expedition</strong><span>Find the right spot.</span></span>
+          <span className="hub-mode-copy"><strong>Daily Expedition</strong><span>Find the right spot</span></span>
         </button>
         {QUIZ_MODES.map((mode) => (
           <button key={mode.id} className={`hub-mode-row mode-${mode.id}`} type="button" onClick={() => onQuiz(mode.id)}>
