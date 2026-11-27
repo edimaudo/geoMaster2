@@ -2737,15 +2737,18 @@ button:focus-visible {
 /* Final spacing and flag visibility refinement across every game mode. */
 .geomaster-app .game-shell,
 .geomaster-app .quiz-shell {
-  gap: 12px;
+  gap: 18px;
 }
 .geomaster-app .game-bottom-nav {
   margin: 0 auto;
   padding-top: 0;
   gap: 10px;
 }
+.geomaster-app .game-bottom-button {
+  min-height: 48px;
+}
 .geomaster-app .quiz-play {
-  gap: 12px;
+  gap: 15px;
 }
 
 /* Give white flags a defined edge against light quiz surfaces. */
@@ -2793,8 +2796,10 @@ button:focus-visible {
 }
 @media (max-width: 680px) {
   .geomaster-app .game-shell,
-  .geomaster-app .quiz-shell { gap: 10px; }
-  .geomaster-app .game-bottom-nav { gap: 8px; }
+  .geomaster-app .quiz-shell { gap: 16px; }
+  .geomaster-app .quiz-play { gap: 14px; }
+  .geomaster-app .game-bottom-nav { gap: 9px; }
+  .geomaster-app .game-bottom-button { min-height: 48px; }
   .geomaster-app .expedition-shell .map-stage .map-wrap {
     height: clamp(175px, 27vh, 235px);
     min-height: 175px;
@@ -2805,6 +2810,11 @@ button:focus-visible {
     min-height: 180px;
     max-height: 240px;
   }
+}
+@media (max-width: 380px) {
+  .geomaster-app .game-shell,
+  .geomaster-app .quiz-shell { gap: 14px; }
+  .geomaster-app .quiz-play { gap: 13px; }
 }
 
 
